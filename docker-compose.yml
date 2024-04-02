@@ -1,0 +1,228 @@
+version: "2"
+
+services:
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:$CONFLUENT_PLATFORM_VERSION
+    hostname: zookeeper
+    container_name: zookeeper
+    platform: $PLATFORM
+    ports:
+      - 2181:2181
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  broker:
+    image: confluentinc/cp-server:$CONFLUENT_PLATFORM_VERSION
+    hostname: broker
+    container_name: broker
+    platform: $PLATFORM
+    depends_on:
+      - zookeeper
+    ports:
+      - 9092:9092
+      - 9101:9101
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9094,PLAINTEXT_HOST://localhost:9092
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_JMX_PORT: 9101
+      KAFKA_JMX_HOSTNAME: localhost
+      KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker:9094
+      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      CONFLUENT_METRICS_ENABLE: true
+      CONFLUENT_SUPPORT_CUSTOMER_ID: anonymous
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:$CONFLUENT_PLATFORM_VERSION
+    hostname: schema-registry
+    container_name: schema-registry
+    platform: $PLATFORM
+    depends_on:
+      - broker
+    ports:
+      - 8081:8081
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: broker:9094
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+
+  control-center:
+    image: confluentinc/cp-enterprise-control-center:$CONFLUENT_PLATFORM_VERSION
+    hostname: control-center
+    container_name: control-center
+    platform: $PLATFORM
+    depends_on:
+      - broker
+      - schema-registry
+    ports:
+      - 9021:9021
+    environment:
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: broker:9094
+      CONTROL_CENTER_ZOOKEEPER_CONNECT: zookeeper:2181
+      CONTROL_CENTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      CONTROL_CENTER_REPLICATION_FACTOR: 1
+      CONFLUENT_METRICS_TOPIC_REPLICATION: 1
+      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
+      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+      # Multiple connect clusters here
+      CONTROL_CENTER_CONNECT_SYSLOG_CLUSTER: http://connect-source-syslog:8083
+      CONTROL_CENTER_CONNECT_RABBITMQ_CLUSTER: http://connect-source-rabbitmq:8083
+      CONTROL_CENTER_CONNECT_MQTT_CLUSTER: http://connect-source-mqtt:8083
+      PORT: 9021
+
+  rest-proxy:
+    image: confluentinc/cp-kafka-rest:$CONFLUENT_PLATFORM_VERSION
+    depends_on:
+      - broker
+      - schema-registry
+    ports:
+      - 8082:8082
+    hostname: rest-proxy
+    container_name: rest-proxy
+    environment:
+      KAFKA_REST_HOST_NAME: rest-proxy
+      KAFKA_REST_BOOTSTRAP_SERVERS: broker:9094
+      KAFKA_REST_LISTENERS: http://0.0.0.0:8082
+      KAFKA_REST_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+
+# Kafka Connect ------------------------------------------------------------------------
+  connect-source-syslog:
+    image: cnfldemos/cp-server-connect-datagen:$CONFLUENT_DATAGEN_VERSION-$CONFLUENT_PLATFORM_VERSION
+    ports:
+      - 8083:8083
+      - $SYSLOG_PORT:$SYSLOG_PORT
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: broker:9094
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: connect-source-syslog
+      CONNECT_CONFIG_STORAGE_TOPIC: connect-configs-syslog
+      CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets-syslog
+      CONNECT_STATUS_STORAGE_TOPIC: connect-status-syslog
+      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      CONNECT_REST_ADVERTISED_HOST_NAME: connect-source-syslog
+      CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
+      CONNECT_LOG4J_LOGGERS: org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components
+    depends_on:
+      - zookeeper
+      - broker
+      - schema-registry
+    command: 
+      - bash 
+      - -c 
+      - |
+        echo "Installing Connector"
+        confluent-hub install --no-prompt confluentinc/kafka-connect-syslog:$CONFLUENT_SYSLOG_SOURCE_VERSION
+        echo "Launching Kafka Connect worker"
+        /etc/confluent/docker/run & 
+        sleep infinity
+
+  connect-source-rabbitmq:
+    image: cnfldemos/cp-server-connect-datagen:$CONFLUENT_DATAGEN_VERSION-$CONFLUENT_PLATFORM_VERSION
+    ports:
+      - 18083:8083
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: broker:9094
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: connect-source-rabbitmq
+      CONNECT_CONFIG_STORAGE_TOPIC: connect-configs-rabbitmq
+      CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets-rabbitmq
+      CONNECT_STATUS_STORAGE_TOPIC: connect-status-rabbitmq
+      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      CONNECT_REST_ADVERTISED_HOST_NAME: connect-source-rabbitmq
+      CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
+      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components
+    depends_on:
+      - zookeeper
+      - broker
+      - schema-registry
+    # In the command section, $ are replaced with $$ to avoid the error 'Invalid interpolation format for "command" option'
+    command: 
+      - bash 
+      - -c 
+      - |
+        echo "Installing Connector"
+        confluent-hub install --no-prompt confluentinc/kafka-connect-rabbitmq:$CONFLUENT_RABBITMQ_SOURCE_VERSION
+        echo "Launching Kafka Connect worker"
+        /etc/confluent/docker/run & 
+        sleep infinity
+
+  connect-source-mqtt:
+    image: cnfldemos/cp-server-connect-datagen:$CONFLUENT_DATAGEN_VERSION-$CONFLUENT_PLATFORM_VERSION
+    ports:
+      - 28083:8083
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: broker:9094
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: connect-source-mqtt
+      CONNECT_CONFIG_STORAGE_TOPIC: connect-configs-mqtt
+      CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets-mqtt
+      CONNECT_STATUS_STORAGE_TOPIC: connect-status-mqtt
+      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      CONNECT_REST_ADVERTISED_HOST_NAME: connect-source-mqtt
+      CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
+      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components
+    depends_on:
+      - zookeeper
+      - broker
+      - schema-registry
+    # In the command section, $ are replaced with $$ to avoid the error 'Invalid interpolation format for "command" option'
+    command: 
+      - bash 
+      - -c 
+      - |
+        echo "Installing Connector"
+        confluent-hub install --no-prompt confluentinc/kafka-connect-mqtt:$CONFLUENT_MQTT_SOURCE_VERSION
+        echo "Launching Kafka Connect worker"
+        /etc/confluent/docker/run & 
+        sleep infinity
+
+  # MQTT Broker
+  mosquitto:
+    image: eclipse-mosquitto
+    hostname: mosquitto
+    container_name: mosquitto
+    restart: unless-stopped
+    ports:
+      - 1883:1883
+      - 9001:9001
+    volumes:
+      - ./mqtt-config:/mosquitto/config
+
+  # Rabbit MQ
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 15672:15672 # Management UI (guest / guest)
+      - 5672:5672   # Default RabbitMQ Port

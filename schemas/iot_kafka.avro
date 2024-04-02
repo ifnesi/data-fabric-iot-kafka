@@ -1,0 +1,31 @@
+{
+    "name": "iot_kafka",
+    "namespace": "kafka_data_fabric.example.com",
+    "type": "record",
+    "fields": [
+        {
+            "name": "datetime",
+            "type": "long"
+        },
+        {
+            "name": "temperature",
+            "type": "double"
+        },
+        {
+            "name": "manufacturer",
+            "type": "string"
+        },
+        {
+            "name": "product",
+            "type": "string"
+        },
+        {
+            "name": "region",
+            "type": "string"
+        },
+        {
+            "name": "id",
+            "type": "string"
+        }
+    ]
+}
