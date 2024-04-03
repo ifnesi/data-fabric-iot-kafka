@@ -75,10 +75,11 @@ services:
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1
       CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
       CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
-      # Multiple connect clusters here
+      # Multiple connect clusters
       CONTROL_CENTER_CONNECT_SYSLOG_CLUSTER: http://connect-source-syslog:8083
       CONTROL_CENTER_CONNECT_RABBITMQ_CLUSTER: http://connect-source-rabbitmq:8083
       CONTROL_CENTER_CONNECT_MQTT_CLUSTER: http://connect-source-mqtt:8083
+      CONTROL_CENTER_CONNECT_SPOOLDIR_CLUSTER: http://connect-source-spooldir:8083
       PORT: 9021
 
   rest-proxy:
@@ -160,7 +161,6 @@ services:
       - zookeeper
       - broker
       - schema-registry
-    # In the command section, $ are replaced with $$ to avoid the error 'Invalid interpolation format for "command" option'
     command: 
       - bash 
       - -c 
@@ -197,13 +197,50 @@ services:
       - zookeeper
       - broker
       - schema-registry
-    # In the command section, $ are replaced with $$ to avoid the error 'Invalid interpolation format for "command" option'
     command: 
       - bash 
       - -c 
       - |
         echo "Installing Connector"
         confluent-hub install --no-prompt confluentinc/kafka-connect-mqtt:$CONFLUENT_MQTT_SOURCE_VERSION
+        echo "Launching Kafka Connect worker"
+        /etc/confluent/docker/run & 
+        sleep infinity
+
+  connect-source-spooldir:
+    image: cnfldemos/cp-server-connect-datagen:$CONFLUENT_DATAGEN_VERSION-$CONFLUENT_PLATFORM_VERSION
+    ports:
+      - 38083:8083
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: broker:9094
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: connect-source-spooldir
+      CONNECT_CONFIG_STORAGE_TOPIC: connect-configs-spooldir
+      CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets-spooldir
+      CONNECT_STATUS_STORAGE_TOPIC: connect-status-spooldir
+      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      CONNECT_REST_ADVERTISED_HOST_NAME: connect-source-spooldir
+      CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
+      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components
+    depends_on:
+      - zookeeper
+      - broker
+      - schema-registry
+    volumes:
+      - ./coap-data:/tmp/coap-data
+    command: 
+      - bash 
+      - -c 
+      - |
+        echo "Installing Connector"
+        confluent-hub install --no-prompt jcustenborder/kafka-connect-spooldir:$CONFLUENT_SPOOLDIR_SOURCE_VERSION
         echo "Launching Kafka Connect worker"
         /etc/confluent/docker/run & 
         sleep infinity

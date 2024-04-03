@@ -50,6 +50,7 @@ async def main():
     client = await Context.create_client_context()
 
     try:
+        message = None
         while True:
             for _id in range(COAP_DEVICES):
                 try:
