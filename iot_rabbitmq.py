@@ -97,6 +97,7 @@ if __name__ == "__main__":
                                 dev_family_key="product",
                                 location_key="region",
                                 serial_number_key="serno",
+                                _timestamp_epoch=False,
                             )
                             channel.basic_publish(
                                 exchange="",

@@ -146,6 +146,7 @@ if __name__ == "__main__":
                                 location_key="location",
                                 timestamp_key="epoch",
                                 unit="F",
+                                _timestamp_epoch=False,
                             )
                             topic = f"python/mqtt/{MANUFACTURER}/{DEVICE_FAMILY}/{devices[_id]['serial_number']}"
                             result = client.publish(

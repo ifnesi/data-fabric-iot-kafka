@@ -119,6 +119,7 @@ if __name__ == "__main__":
                             location_key="region",
                             timestamp_key="datetime",
                             serial_number_key="id",
+                            _timestamp_epoch=False,
                         )
 
                         producer.produce(
