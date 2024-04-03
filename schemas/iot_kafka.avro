@@ -5,7 +5,7 @@
     "fields": [
         {
             "name": "datetime",
-            "type": "long"
+            "type": "string"
         },
         {
             "name": "temperature",
