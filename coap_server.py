@@ -1,4 +1,5 @@
 import os
+import json
 import aiocoap
 import asyncio
 import logging
@@ -12,17 +13,40 @@ from utils import set_logging_handler
 
 
 class TelemetryResource(resource.Resource):
-    def __init__(self, logger):
+    def __init__(
+        self,
+        logger,
+        encoding: str = "utf-8",
+    ):
         super().__init__()
         self.logger = logger
+        self.encoding = encoding
 
     async def render_post(self, request):
-        logging.info(f"{request.code} from {request.remote.uri} ({request.mid})")
-        self.logger.info(f"{request.payload.decode('utf-8')}")
-        return aiocoap.Message(
-            code=resource.numbers.codes.CONTENT,
-            payload=b"OK",
-        )
+        # Validate payload
+        try:
+            payload = json.loads(request.payload.decode(self.encoding))
+            if isinstance(payload, dict):
+                # Log request to screen
+                logging.info(
+                    f"{request.code} from {request.remote.uri} ({request.mid})"
+                )
+                # Log request to disk (JSON payload)
+                self.logger.info(json.dumps(payload))
+                return aiocoap.Message(
+                    code=resource.numbers.codes.CONTENT,
+                    payload=b"OK",
+                )
+            else:
+                raise ValueError("Invalid payload, not JSON")
+        except Exception as err:
+            logging.error(
+                f"{request.code} from {request.remote.uri} ({request.mid}): {err}"
+            )
+            return aiocoap.Message(
+                code=resource.numbers.codes.BAD_REQUEST,
+                payload=str(err).encode(self.encoding),
+            )
 
     # https://docs.confluent.io/kafka-connectors/spooldir/current/connectors/json_source_connector.html#spooldir-json-source-connector
 
@@ -32,17 +56,23 @@ async def main(
     coap_host,
     coap_port,
     coap_path,
+    encoding,
 ):
     # Resource tree creation
     root = resource.Site()
 
     root.add_resource(
         [".well-known", "core"],
-        resource.WKCResource(root.get_resources_as_linkheader),
+        resource.WKCResource(
+            root.get_resources_as_linkheader,
+        ),
     )
     root.add_resource(
         [coap_path],
-        TelemetryResource(logger),
+        TelemetryResource(
+            logger,
+            encoding=encoding,
+        ),
     )
 
     await aiocoap.Context.create_server_context(
@@ -52,6 +82,8 @@ async def main(
         ),
         site=root,
     )
+
+    logging.info(f"Started CoAP server on {coap_host}:{coap_port}")
 
     # Run forever
     await asyncio.get_running_loop().create_future()
@@ -64,6 +96,7 @@ if __name__ == "__main__":
     COAP_HOST = os.environ["COAP_HOST"]
     COAP_PORT = int(os.environ["COAP_PORT"])
     COAP_PATH = os.environ["COAP_PATH"]
+    COAP_ENCODING = os.environ["COAP_ENCODING"]
 
     FILE_APP = os.path.splitext(os.path.split(__file__)[-1])[0]
     set_logging_handler(FILE_APP)
@@ -74,7 +107,7 @@ if __name__ == "__main__":
         when="s",
         interval=5,
         backupCount=172800,
-        encoding="utf-8",
+        encoding=COAP_ENCODING,
         delay=False,
     )
     handler.setFormatter(logging.Formatter("%(message)s"))
@@ -88,5 +121,6 @@ if __name__ == "__main__":
             COAP_HOST,
             COAP_PORT,
             COAP_PATH,
+            COAP_ENCODING,
         )
     )
