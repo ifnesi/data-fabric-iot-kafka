@@ -4,5 +4,3 @@
 *.pyc
 __pycache__/
 .env
-_*.py
-_*.sh

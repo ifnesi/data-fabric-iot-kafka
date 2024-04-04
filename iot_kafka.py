@@ -22,7 +22,7 @@ from utils import (
     generate_payload,
     get_next_interval,
     set_logging_handler,
-    generate_serial_number,
+    get_details,
 )
 
 
@@ -66,12 +66,12 @@ if __name__ == "__main__":
     # Devices cache
     devices = dict()
     for _id in range(KAFKA_DEVICES):
-        serial_number = generate_serial_number(_id, SEED)
+        serial_number, location, temp_mu, temp_sigma = get_details(_id, SEED)
         devices[_id] = {
             "serial_number": serial_number,
-            "temperature": get_delta_temp(25, 5),
+            "temperature": get_delta_temp(temp_mu, temp_sigma),
             "last_sent": get_next_interval(KAFKA_MIN_ITERVAL_MS, KAFKA_MAX_ITERVAL_MS),
-            "location": f"Region_{int(serial_number, 16) % 100:02d}",
+            "location": location,
         }
 
     config = ConfigParser()
