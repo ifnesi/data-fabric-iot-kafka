@@ -152,3 +152,51 @@ curl -s http://localhost:8083/connectors/rabbitmq_source/status
 
 # ksqlDB Statements
 source ./ksql_rest.sh ksqldb_statements.sql
+
+# Elastic Connector
+echo ""
+curl -i -X PUT http://localhost:8083/connectors/elastic_sink/config \
+     -H "Content-Type: application/json" \
+     -d '{
+            "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
+            "connection.url": "http://elasticsearch:9200",
+            "key.ignore": "true",
+            "topics": "data-fabric-ALL-devices",
+            "drop.invalid.message": "true",
+            "behavior.on.null.values": "IGNORE",
+            "behavior.on.malformed.documents": "ignore",
+            "write.method": "insert",
+            "data.stream.dataset": "iot",
+            "data.stream.type": "METRICS",
+            "data.stream.timestamp.field": "timestamp",
+            "tasks.max": "1"
+        }'
+sleep 5
+echo ""
+curl -s http://localhost:8083/connectors/elastic_sink/status
+
+# Postgres Connector
+echo ""
+curl -i -X PUT http://localhost:8083/connectors/postgres_sink/config \
+     -H "Content-Type: application/json" \
+     -d '{
+            "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+            "topics": "data-fabric-ALL-devices",
+            "connection.url": "jdbc:postgresql://postgres:5432/postgres?verifyServerCertificate=false&useSSL=false&requireSSL=false",
+            "connection.user": "postgres",
+            "connection.password": "postgres",
+            "insert.mode": "insert",
+            "auto.create": "true",
+            "tasks.max": "1"
+        }'
+sleep 5
+echo ""
+curl -s http://localhost:8083/connectors/postgres_sink/status
+
+echo ""
+echo ""
+echo "Creating Kibana/Elastic Dashboard"
+sleep 10
+curl -X POST "http://localhost:5601/api/saved_objects/_import?createNewCopies=true" -H "kbn-xsrf: true" --form file=@kibana_dashboard.ndjson
+echo ""
+echo ""

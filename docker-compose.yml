@@ -65,6 +65,8 @@ services:
     depends_on:
       - broker
       - schema-registry
+      - connect-1
+      - connect-2
     ports:
       - 9021:9021
     environment:
@@ -79,7 +81,7 @@ services:
       CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
       # Multiple connect clusters
       CONTROL_CENTER_CONNECT_C1_CLUSTER: http://connect-1:8083
-      CONTROL_CENTER_CONNECT_C2_CLUSTER: http://connect-2:18083
+      CONTROL_CENTER_CONNECT_C2_CLUSTER: http://connect-2:8083
       PORT: 9021
 
   rest-proxy:
@@ -167,6 +169,7 @@ services:
         confluent-hub install --no-prompt confluentinc/kafka-connect-mqtt:$CONFLUENT_MQTT_SOURCE_VERSION
         confluent-hub install --no-prompt confluentinc/kafka-connect-rabbitmq:$CONFLUENT_RABBITMQ_SOURCE_VERSION
         confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:$CONFLUENT_ELASTIC_SINK_VERSION
+        confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:$CONFLUENT_JDBC_SINK_VERSION
         echo "Launching Kafka Connect worker"
         /etc/confluent/docker/run & 
         sleep infinity
@@ -254,3 +257,30 @@ services:
       - 5601:5601
     depends_on:
       - elasticsearch
+
+  # PostgreSQL
+  postgres:
+    image: debezium/postgres:$POSTGRESQL_VERSION
+    platform: linux/x86_64
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - 5432:5432
+    restart: always
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+       - ./pgadmin:/var/lib/pgadmin
+    ports:
+      - 5050:80
+    restart: always
+    depends_on:
+      - postgres
