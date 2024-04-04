@@ -50,8 +50,9 @@ echo "Loading environment variables"
 source .env
 
 echo ""
-echo "Activating Virtual Environment"
+echo "Activating Virtual Environment / install Python requirements"
 source .venv/bin/activate
+pip install -r requirements.txt
 sleep 1
 
 # Kafka IoT Device
@@ -200,3 +201,5 @@ sleep 10
 curl -X POST "http://localhost:5601/api/saved_objects/_import?createNewCopies=true" -H "kbn-xsrf: true" --form file=@kibana_dashboard.ndjson
 echo ""
 echo ""
+
+deactivate
