@@ -1,9 +1,12 @@
 #!/bin/bash
 
+echo ""
 echo "Killing processes..."
 ps aux  |  grep -i  ' iot_'  |  awk '{print $2}'  |  xargs kill -9 >/dev/null 2>&1 &
 ps aux  |  grep -i  ' coap_server.py'  |  awk '{print $2}'  |  xargs kill -9 >/dev/null 2>&1 &
 
+echo ""
+echo "Starting docker compose..."
 docker compose up -d
 
 # Waiting services to be ready
@@ -32,20 +35,6 @@ echo ""
 while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' http://localhost:18083)" != "200" ]]
 do
     echo "Waiting Connect Cluster 2 to be ready..."
-    sleep 2
-done
-
-echo ""
-while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' http://localhost:28083)" != "200" ]]
-do
-    echo "Waiting Connect Cluster 3 to be ready..."
-    sleep 2
-done
-
-echo ""
-while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' http://localhost:38083)" != "200" ]]
-do
-    echo "Waiting Connect Cluster 4 to be ready..."
     sleep 2
 done
 
@@ -98,7 +87,7 @@ echo "Starting SysLog IoT device"
 python3 iot_syslog.py >/dev/null 2>&1 &
 
 # Spooldir Connector / Iot Device
-curl -i -X PUT http://localhost:38083/connectors/spooldir_source/config \
+curl -i -X PUT http://localhost:18083/connectors/spooldir_source/config \
      -H "Content-Type: application/json" \
      -d '{
             "connector.class": "com.github.jcustenborder.kafka.connect.spooldir.SpoolDirSchemaLessJsonSourceConnector",
@@ -122,10 +111,10 @@ sleep 2
 echo ""
 echo "Starting CoAP IoT device"
 python3 iot_coap.py >/dev/null 2>&1 &
-curl -s http://localhost:8083/connectors/spooldir_source/status
+curl -s http://localhost:18083/connectors/spooldir_source/status
 
 # MQTT Connector / Iot Device
-curl -i -X PUT http://localhost:28083/connectors/mqtt_source/config \
+curl -i -X PUT http://localhost:8083/connectors/mqtt_source/config \
      -H "Content-Type: application/json" \
      -d '{
             "connector.class": "io.confluent.connect.mqtt.MqttSourceConnector",
@@ -136,7 +125,7 @@ curl -i -X PUT http://localhost:28083/connectors/mqtt_source/config \
         }'
 sleep 5
 echo ""
-curl -s http://localhost:18083/connectors/mqtt_source/status
+curl -s http://localhost:8083/connectors/mqtt_source/status
 sleep 1
 echo ""
 echo "Starting MQTT IoT device"
@@ -147,7 +136,7 @@ echo ""
 echo "Starting RabbitMQ IoT device"
 python3 iot_rabbitmq.py >/dev/null 2>&1 &
 sleep 3
-curl -i -X PUT http://localhost:18083/connectors/rabbitmq_source/config \
+curl -i -X PUT http://localhost:8083/connectors/rabbitmq_source/config \
      -H "Content-Type: application/json" \
      -d '{
             "connector.class": "io.confluent.connect.rabbitmq.RabbitMQSourceConnector",
@@ -159,7 +148,7 @@ curl -i -X PUT http://localhost:18083/connectors/rabbitmq_source/config \
         }'
 sleep 5
 echo ""
-curl -s http://localhost:18083/connectors/rabbitmq_source/status
+curl -s http://localhost:8083/connectors/rabbitmq_source/status
 
 # ksqlDB Statements
 source ./ksql_rest.sh ksqldb_statements.sql

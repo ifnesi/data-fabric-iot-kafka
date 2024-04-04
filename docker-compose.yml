@@ -78,10 +78,8 @@ services:
       CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
       CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
       # Multiple connect clusters
-      CONTROL_CENTER_CONNECT_SYSLOG_CLUSTER: http://connect-source-syslog:8083
-      CONTROL_CENTER_CONNECT_RABBITMQ_CLUSTER: http://connect-source-rabbitmq:8083
-      CONTROL_CENTER_CONNECT_MQTT_CLUSTER: http://connect-source-mqtt:8083
-      CONTROL_CENTER_CONNECT_SPOOLDIR_CLUSTER: http://connect-source-spooldir:8083
+      CONTROL_CENTER_CONNECT_C1_CLUSTER: http://connect-1:8083
+      CONTROL_CENTER_CONNECT_C2_CLUSTER: http://connect-2:18083
       PORT: 9021
 
   rest-proxy:
@@ -133,7 +131,7 @@ services:
     tty: true
 
 # Kafka Connect ------------------------------------------------------------------------
-  connect-source-syslog:
+  connect-1:
     image: cnfldemos/cp-server-connect-datagen:$CONFLUENT_DATAGEN_VERSION-$CONFLUENT_PLATFORM_VERSION
     ports:
       - 8083:8083
@@ -141,15 +139,15 @@ services:
     environment:
       CONNECT_BOOTSTRAP_SERVERS: broker:9094
       CONNECT_REST_PORT: 8083
-      CONNECT_GROUP_ID: connect-source-syslog
-      CONNECT_CONFIG_STORAGE_TOPIC: connect-configs-syslog
-      CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets-syslog
-      CONNECT_STATUS_STORAGE_TOPIC: connect-status-syslog
+      CONNECT_GROUP_ID: connect-1
+      CONNECT_CONFIG_STORAGE_TOPIC: connect-configs-1
+      CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets-1
+      CONNECT_STATUS_STORAGE_TOPIC: connect-status-1
       CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
       CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
       CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
       CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
-      CONNECT_REST_ADVERTISED_HOST_NAME: connect-source-syslog
+      CONNECT_REST_ADVERTISED_HOST_NAME: connect-1
       CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
       CONNECT_LOG4J_LOGGERS: org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR
       CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
@@ -166,98 +164,29 @@ services:
       - |
         echo "Installing Connector"
         confluent-hub install --no-prompt confluentinc/kafka-connect-syslog:$CONFLUENT_SYSLOG_SOURCE_VERSION
+        confluent-hub install --no-prompt confluentinc/kafka-connect-mqtt:$CONFLUENT_MQTT_SOURCE_VERSION
+        confluent-hub install --no-prompt confluentinc/kafka-connect-rabbitmq:$CONFLUENT_RABBITMQ_SOURCE_VERSION
+        confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:$CONFLUENT_ELASTIC_SINK_VERSION
         echo "Launching Kafka Connect worker"
         /etc/confluent/docker/run & 
         sleep infinity
 
-  connect-source-rabbitmq:
+  connect-2:
     image: cnfldemos/cp-server-connect-datagen:$CONFLUENT_DATAGEN_VERSION-$CONFLUENT_PLATFORM_VERSION
     ports:
       - 18083:8083
     environment:
       CONNECT_BOOTSTRAP_SERVERS: broker:9094
       CONNECT_REST_PORT: 8083
-      CONNECT_GROUP_ID: connect-source-rabbitmq
-      CONNECT_CONFIG_STORAGE_TOPIC: connect-configs-rabbitmq
-      CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets-rabbitmq
-      CONNECT_STATUS_STORAGE_TOPIC: connect-status-rabbitmq
-      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
-      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
-      CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
-      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
-      CONNECT_REST_ADVERTISED_HOST_NAME: connect-source-rabbitmq
-      CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
-      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
-      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components
-    depends_on:
-      - zookeeper
-      - broker
-      - schema-registry
-    command: 
-      - bash 
-      - -c 
-      - |
-        echo "Installing Connector"
-        confluent-hub install --no-prompt confluentinc/kafka-connect-rabbitmq:$CONFLUENT_RABBITMQ_SOURCE_VERSION
-        echo "Launching Kafka Connect worker"
-        /etc/confluent/docker/run & 
-        sleep infinity
-
-  connect-source-mqtt:
-    image: cnfldemos/cp-server-connect-datagen:$CONFLUENT_DATAGEN_VERSION-$CONFLUENT_PLATFORM_VERSION
-    ports:
-      - 28083:8083
-    environment:
-      CONNECT_BOOTSTRAP_SERVERS: broker:9094
-      CONNECT_REST_PORT: 8083
-      CONNECT_GROUP_ID: connect-source-mqtt
-      CONNECT_CONFIG_STORAGE_TOPIC: connect-configs-mqtt
-      CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets-mqtt
-      CONNECT_STATUS_STORAGE_TOPIC: connect-status-mqtt
-      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
-      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
-      CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
-      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
-      CONNECT_REST_ADVERTISED_HOST_NAME: connect-source-mqtt
-      CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
-      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
-      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components
-    depends_on:
-      - zookeeper
-      - broker
-      - schema-registry
-    command: 
-      - bash 
-      - -c 
-      - |
-        echo "Installing Connector"
-        confluent-hub install --no-prompt confluentinc/kafka-connect-mqtt:$CONFLUENT_MQTT_SOURCE_VERSION
-        echo "Launching Kafka Connect worker"
-        /etc/confluent/docker/run & 
-        sleep infinity
-
-  connect-source-spooldir:
-    image: cnfldemos/cp-server-connect-datagen:$CONFLUENT_DATAGEN_VERSION-$CONFLUENT_PLATFORM_VERSION
-    ports:
-      - 38083:8083
-    environment:
-      CONNECT_BOOTSTRAP_SERVERS: broker:9094
-      CONNECT_REST_PORT: 8083
-      CONNECT_GROUP_ID: connect-source-spooldir
-      CONNECT_CONFIG_STORAGE_TOPIC: connect-configs-spooldir
-      CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets-spooldir
-      CONNECT_STATUS_STORAGE_TOPIC: connect-status-spooldir
+      CONNECT_GROUP_ID: connect-2
+      CONNECT_CONFIG_STORAGE_TOPIC: connect-configs-2
+      CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets-2
+      CONNECT_STATUS_STORAGE_TOPIC: connect-status-2
       CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
       CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
       CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.storage.StringConverter
       CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
-      CONNECT_REST_ADVERTISED_HOST_NAME: connect-source-spooldir
+      CONNECT_REST_ADVERTISED_HOST_NAME: connect-2
       CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
       CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
       CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
@@ -298,3 +227,30 @@ services:
     ports:
       - 15672:15672 # Management UI (guest / guest)
       - 5672:5672   # Default RabbitMQ Port
+
+  # Elastic
+  elasticsearch:
+    image: elasticsearch:$ELASTIC_VERSION
+    container_name: elasticsearch
+    restart: always
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  # Kibana
+  kibana:
+    image: kibana:$KIBANA_VERSION
+    container_name: kibana
+    restart: always
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
