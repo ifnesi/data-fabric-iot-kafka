@@ -106,7 +106,7 @@ if __name__ == "__main__":
     HTTP_MIN_ITERVAL_MS = int(os.environ["HTTP_MIN_ITERVAL_MS"])
     HTTP_MAX_ITERVAL_MS = int(os.environ["HTTP_MAX_ITERVAL_MS"])
 
-    SEED = "http"
+    SEED = "http://"
     MANUFACTURER = "KafkaHttpTemp"
     DEVICE_FAMILY = "Kh1"
 
@@ -117,7 +117,10 @@ if __name__ == "__main__":
         devices[_id] = {
             "serial_number": serial_number,
             "temperature": get_delta_temp(temp_mu, temp_sigma),
-            "last_sent": get_next_interval(HTTP_MIN_ITERVAL_MS, HTTP_MAX_ITERVAL_MS),
+            "last_sent": get_next_interval(
+                HTTP_MIN_ITERVAL_MS,
+                HTTP_MAX_ITERVAL_MS,
+            ),
             "location": location,
         }
 
@@ -137,11 +140,15 @@ if __name__ == "__main__":
                             serial_number=devices[_id]["serial_number"],
                             manufacturer=MANUFACTURER,
                             dev_family=DEVICE_FAMILY,
-                            location=devices[_id]["location"],
+                            location=devices[_id]["location"]["city"],
+                            lat=devices[_id]["location"]["lat"],
+                            lng=devices[_id]["location"]["lng"],
+                            location_key="loc",
+                            lat_key="lt",
+                            lng_key="lg",
                             temperature_key="temp",
                             manufacturer_key="mnf",
                             dev_family_key="prd",
-                            location_key="loc",
                             timestamp_key="tm",
                             serial_number_key="sn",
                         )

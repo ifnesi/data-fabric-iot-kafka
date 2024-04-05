@@ -7,6 +7,7 @@ ps aux  |  grep -i  ' coap_server.py'  |  awk '{print $2}'  |  xargs kill -9 >/d
 
 echo ""
 echo "Starting docker compose..."
+source .env
 docker compose up -d
 
 # Waiting services to be ready
@@ -152,7 +153,11 @@ echo ""
 curl -s http://localhost:8083/connectors/rabbitmq_source/status
 
 # ksqlDB Statements
-source ./ksql_rest.sh ksqldb_statements.sql
+echo ""
+echo ""
+echo "Submit ksqlDB statements"
+sleep 10
+python3 ksqldb_provisioning.py
 
 # Elastic Connector
 echo ""

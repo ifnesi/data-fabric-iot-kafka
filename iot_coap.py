@@ -32,7 +32,7 @@ async def main():
     COAP_MAX_ITERVAL_MS = int(os.environ["HTTP_MAX_ITERVAL_MS"])
     COAP_URI = f"coap://{COAP_HOST}:{COAP_PORT}/{COAP_PATH}"
 
-    SEED = "coap"
+    SEED = "_CoAP"
     MANUFACTURER = "CoAP"
     DEVICE_FAMILY = "CPd"
 
@@ -43,7 +43,10 @@ async def main():
         devices[_id] = {
             "serial_number": serial_number,
             "temperature": get_delta_temp(temp_mu, temp_sigma),
-            "last_sent": get_next_interval(COAP_MIN_ITERVAL_MS, COAP_MAX_ITERVAL_MS),
+            "last_sent": get_next_interval(
+                COAP_MIN_ITERVAL_MS,
+                COAP_MAX_ITERVAL_MS,
+            ),
             "location": location,
         }
 
@@ -63,11 +66,15 @@ async def main():
                             serial_number=devices[_id]["serial_number"],
                             manufacturer=MANUFACTURER,
                             dev_family=DEVICE_FAMILY,
-                            location=devices[_id]["location"],
+                            location=devices[_id]["location"]["city"],
+                            lat=devices[_id]["location"]["lat"],
+                            lng=devices[_id]["location"]["lng"],
+                            location_key="pos",
+                            lat_key="lat",
+                            lng_key="long",
                             temperature_key="tmp",
                             manufacturer_key="manufacturer",
                             dev_family_key="family",
-                            location_key="pos",
                             serial_number_key="sn",
                         )
                         request = Message(

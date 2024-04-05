@@ -1,9 +1,12 @@
+import sys
+import json
 import time
 import random
 import hashlib
 import logging
 
-from datetime import datetime,timezone
+from datetime import datetime, timezone
+from functools import lru_cache
 
 
 def set_logging_handler(
@@ -50,10 +53,32 @@ def generate_serial_number(
     return hashlib.sha1(f"{id}_{seed}".encode("utf-8")).hexdigest()[:length]
 
 
-def get_details(id: int, seed: str) -> tuple:
+@lru_cache
+def get_locations(file: str = "locations.json") -> list:
+    try:
+        with open(file, "r") as f:
+            result = json.loads(f.read())
+    except Exception:
+        logging.error(sys_exc(sys.exc_info()))
+        result = [
+            {
+                "city": "Prime Meridian",
+                "lat": "0",
+                "lng": "0",
+                "country": "Ghana",
+            }
+        ]
+    return result
+
+
+def get_details(
+    id: int,
+    seed: str,
+) -> tuple:
     serial_number = generate_serial_number(id, seed)
-    seed_loc = int(serial_number, 16) % 100
-    location = f"Region_{seed_loc:02d}"
+    seed_loc = int(serial_number, 16)
+    locations = get_locations()
+    location = locations[seed_loc % len(locations)]
     temp_mu = 31 - seed_loc % 19
     temp_sigma = 0.05
     return (
@@ -69,6 +94,8 @@ def generate_payload(
     manufacturer: str = None,
     dev_family: str = None,
     location: str = None,
+    lat: float = None,
+    lng: float = None,
     serial_number: str = None,
     unit: str = None,
     timestamp_key: str = "timestamp",
@@ -78,6 +105,8 @@ def generate_payload(
     serial_number_key: str = "serial_number",
     location_key: str = "location",
     unit_key: str = "unit",
+    lat_key: str = "lat",
+    lng_key: str = "lng",
     _timestamp_epoch: bool = True,
 ) -> dict:
     local_vars = dict(locals())

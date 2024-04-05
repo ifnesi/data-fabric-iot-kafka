@@ -104,7 +104,7 @@ if __name__ == "__main__":
     MQTT_MIN_ITERVAL_MS = int(os.environ["MQTT_MIN_ITERVAL_MS"])
     MQTT_MAX_ITERVAL_MS = int(os.environ["MQTT_MAX_ITERVAL_MS"])
 
-    SEED = "mqtt"
+    SEED = "^MQTT"
     MANUFACTURER = "PicoQ"
     DEVICE_FAMILY = "Q1"
 
@@ -115,7 +115,10 @@ if __name__ == "__main__":
         devices[_id] = {
             "serial_number": serial_number,
             "temperature": get_delta_temp(temp_mu, temp_sigma),
-            "last_sent": get_next_interval(MQTT_MIN_ITERVAL_MS, MQTT_MAX_ITERVAL_MS),
+            "last_sent": get_next_interval(
+                MQTT_MIN_ITERVAL_MS,
+                MQTT_MAX_ITERVAL_MS,
+            ),
             "location": location,
         }
 
@@ -138,9 +141,13 @@ if __name__ == "__main__":
                             )
                             message = generate_payload(
                                 devices[_id]["temperature"],
-                                location=devices[_id]["location"],
                                 temperature_key="temperature",
+                                location=devices[_id]["location"]["city"],
+                                lat=devices[_id]["location"]["lat"],
+                                lng=devices[_id]["location"]["lng"],
                                 location_key="location",
+                                lat_key="latitude",
+                                lng_key="longitude",
                                 timestamp_key="epoch",
                                 unit="F",
                                 _timestamp_epoch=False,

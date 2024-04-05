@@ -24,6 +24,14 @@
             "type": "string"
         },
         {
+            "name": "lat",
+            "type": "double"
+        },
+        {
+            "name": "lng",
+            "type": "double"
+        },
+        {
             "name": "id",
             "type": "string"
         }

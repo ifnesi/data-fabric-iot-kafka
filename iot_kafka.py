@@ -59,7 +59,7 @@ if __name__ == "__main__":
     KAFKA_SCHEMA_FILE = os.environ["KAFKA_SCHEMA_FILE"]
     KAFKA_DEVICES = min(25, int(os.environ["KAFKA_DEVICES"]))
 
-    SEED = "kafka"
+    SEED = "*Kafka"
     MANUFACTURER = "KafkaTemp"
     DEVICE_FAMILY = "K1"
 
@@ -70,7 +70,10 @@ if __name__ == "__main__":
         devices[_id] = {
             "serial_number": serial_number,
             "temperature": get_delta_temp(temp_mu, temp_sigma),
-            "last_sent": get_next_interval(KAFKA_MIN_ITERVAL_MS, KAFKA_MAX_ITERVAL_MS),
+            "last_sent": get_next_interval(
+                KAFKA_MIN_ITERVAL_MS,
+                KAFKA_MAX_ITERVAL_MS,
+            ),
             "location": location,
         }
 
@@ -112,11 +115,15 @@ if __name__ == "__main__":
                             serial_number=devices[_id]["serial_number"],
                             manufacturer=MANUFACTURER,
                             dev_family=DEVICE_FAMILY,
-                            location=devices[_id]["location"],
+                            location=devices[_id]["location"]["city"],
+                            lat=devices[_id]["location"]["lat"],
+                            lng=devices[_id]["location"]["lng"],
+                            location_key="region",
+                            lat_key="lat",
+                            lng_key="lng",
                             temperature_key="temperature",
                             manufacturer_key="manufacturer",
                             dev_family_key="product",
-                            location_key="region",
                             timestamp_key="datetime",
                             serial_number_key="id",
                             _timestamp_epoch=False,

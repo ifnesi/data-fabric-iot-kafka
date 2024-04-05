@@ -64,6 +64,8 @@ class SyslogClientRFC3164(SyslogClient):
         severity: int,
         signature_id: int,
         location: str,
+        lat: float,
+        lng: float,
         temperature: float,
         unit: str,
     ):
@@ -78,6 +80,10 @@ class SyslogClientRFC3164(SyslogClient):
         # Extensions: https://github.com/kamushadenes/cefevent/blob/master/cefevent/extensions.py
         c.set_field("deviceCustomFloatingPoint1", temperature)
         c.set_field("deviceCustomFloatingPoint1Label", unit)
+        c.set_field("deviceCustomFloatingPoint2", lat)
+        c.set_field("deviceCustomFloatingPoint2Label", "lat")
+        c.set_field("deviceCustomFloatingPoint3", lng)
+        c.set_field("deviceCustomFloatingPoint3Label", "lon")
         c.set_field("deviceDirection", location)
         return c.build_cef()
 
@@ -85,6 +91,8 @@ class SyslogClientRFC3164(SyslogClient):
         self,
         temperature: float,
         location: str,
+        lat: float,
+        lng: float,
         timestamp: datetime = None,
         facility: int = FAC_USER,
         severity: int = SEV_NOTICE,
@@ -99,6 +107,8 @@ class SyslogClientRFC3164(SyslogClient):
             severity,
             100,
             location,
+            lat,
+            lng,
             temperature,
             unit,
         )
@@ -128,7 +138,7 @@ if __name__ == "__main__":
     SYSLOG_MIN_ITERVAL_MS = int(os.environ["SYSLOG_MIN_ITERVAL_MS"])
     SYSLOG_MAX_ITERVAL_MS = int(os.environ["SYSLOG_MAX_ITERVAL_MS"])
 
-    SEED = "syslog"
+    SEED = "#Syslog"
     MANUFACTURER = "SysIotLog"
     DEVICE_FAMILY = "SysTemp"
 
@@ -140,7 +150,10 @@ if __name__ == "__main__":
             "serial_number": serial_number,
             "temperature": get_delta_temp(temp_mu, temp_sigma),
             "unit": "C",
-            "last_sent": get_next_interval(SYSLOG_MIN_ITERVAL_MS, SYSLOG_MAX_ITERVAL_MS),
+            "last_sent": get_next_interval(
+                SYSLOG_MIN_ITERVAL_MS,
+                SYSLOG_MAX_ITERVAL_MS,
+            ),
             "location": location,
             "client": SyslogClientRFC3164(
                 SYSLOG_HOST,
@@ -166,7 +179,9 @@ if __name__ == "__main__":
                             timestamp = get_epoch_milli()
                             syslog_data = devices[_id]["client"].log(
                                 temperature=devices[_id]["temperature"],
-                                location=devices[_id]["location"],
+                                location=devices[_id]["location"]["city"],
+                                lat=devices[_id]["location"]["lat"],
+                                lng=devices[_id]["location"]["lng"],
                                 unit=devices[_id]["unit"],
                             )
 

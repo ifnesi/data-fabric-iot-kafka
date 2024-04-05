@@ -1,0 +1,1550 @@
+[
+    {
+        "city": "London",
+        "lat": 51.5072,
+        "lng": -0.1275,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Birmingham",
+        "lat": 52.48,
+        "lng": -1.9025,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Portsmouth",
+        "lat": 50.8058,
+        "lng": -1.0872,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Southampton",
+        "lat": 50.9025,
+        "lng": -1.4042,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Nottingham",
+        "lat": 52.9561,
+        "lng": -1.1512,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Bristol",
+        "lat": 51.4536,
+        "lng": -2.5975,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Manchester",
+        "lat": 53.479,
+        "lng": -2.2452,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Liverpool",
+        "lat": 53.4094,
+        "lng": -2.9785,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Leicester",
+        "lat": 52.6344,
+        "lng": -1.1319,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Worthing",
+        "lat": 50.8147,
+        "lng": -0.3714,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Coventry",
+        "lat": 52.4081,
+        "lng": -1.5106,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Belfast",
+        "lat": 54.5964,
+        "lng": -5.93,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Bradford",
+        "lat": 53.8,
+        "lng": -1.75,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Derby",
+        "lat": 52.9247,
+        "lng": -1.478,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Plymouth",
+        "lat": 50.3714,
+        "lng": -4.1422,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Westminster",
+        "lat": 51.4947,
+        "lng": -0.1353,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Wolverhampton",
+        "lat": 52.5833,
+        "lng": -2.1333,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Northampton",
+        "lat": 52.2304,
+        "lng": -0.8938,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Norwich",
+        "lat": 52.6286,
+        "lng": 1.2928,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Luton",
+        "lat": 51.8783,
+        "lng": -0.4147,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Solihull",
+        "lat": 52.413,
+        "lng": -1.778,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Islington",
+        "lat": 51.544,
+        "lng": -0.1027,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Aberdeen",
+        "lat": 57.15,
+        "lng": -2.11,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Croydon",
+        "lat": 51.3727,
+        "lng": -0.1099,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Bournemouth",
+        "lat": 50.72,
+        "lng": -1.88,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Basildon",
+        "lat": 51.58,
+        "lng": 0.49,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Maidstone",
+        "lat": 51.272,
+        "lng": 0.529,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Ilford",
+        "lat": 51.5575,
+        "lng": 0.0858,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Warrington",
+        "lat": 53.39,
+        "lng": -2.59,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Oxford",
+        "lat": 51.75,
+        "lng": -1.25,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Harrow",
+        "lat": 51.5836,
+        "lng": -0.3464,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "West Bromwich",
+        "lat": 52.519,
+        "lng": -1.995,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Gloucester",
+        "lat": 51.8667,
+        "lng": -2.25,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "York",
+        "lat": 53.96,
+        "lng": -1.08,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Blackpool",
+        "lat": 53.8142,
+        "lng": -3.0503,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Stockport",
+        "lat": 53.4083,
+        "lng": -2.1494,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Sale",
+        "lat": 53.424,
+        "lng": -2.322,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Tottenham",
+        "lat": 51.5975,
+        "lng": -0.0681,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Cambridge",
+        "lat": 52.2053,
+        "lng": 0.1192,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Romford",
+        "lat": 51.5768,
+        "lng": 0.1801,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Colchester",
+        "lat": 51.8917,
+        "lng": 0.903,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "High Wycombe",
+        "lat": 51.6287,
+        "lng": -0.7482,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Gateshead",
+        "lat": 54.9556,
+        "lng": -1.6,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Slough",
+        "lat": 51.5084,
+        "lng": -0.5881,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Blackburn",
+        "lat": 53.748,
+        "lng": -2.482,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Chelmsford",
+        "lat": 51.73,
+        "lng": 0.48,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Rochdale",
+        "lat": 53.61,
+        "lng": -2.16,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Rotherham",
+        "lat": 53.43,
+        "lng": -1.357,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Walthamstow",
+        "lat": 51.584,
+        "lng": -0.021,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Basingstoke",
+        "lat": 51.2667,
+        "lng": -1.0876,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Salford",
+        "lat": 53.483,
+        "lng": -2.2931,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Hounslow",
+        "lat": 51.4668,
+        "lng": -0.375,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Wembley",
+        "lat": 51.5528,
+        "lng": -0.2979,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Worcester",
+        "lat": 52.1911,
+        "lng": -2.2206,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Hammersmith",
+        "lat": 51.4928,
+        "lng": -0.2229,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Rayleigh",
+        "lat": 51.5864,
+        "lng": 0.6049,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Hemel Hempstead",
+        "lat": 51.7526,
+        "lng": -0.4692,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Bath",
+        "lat": 51.38,
+        "lng": -2.36,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Hayes",
+        "lat": 51.5127,
+        "lng": -0.4211,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Darlington",
+        "lat": 54.527,
+        "lng": -1.5526,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Hove",
+        "lat": 50.8352,
+        "lng": -0.1758,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Hastings",
+        "lat": 50.85,
+        "lng": 0.57,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Watford",
+        "lat": 51.655,
+        "lng": -0.3957,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Stevenage",
+        "lat": 51.9017,
+        "lng": -0.2019,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Hartlepool",
+        "lat": 54.69,
+        "lng": -1.21,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Chester",
+        "lat": 53.19,
+        "lng": -2.89,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Fulham",
+        "lat": 51.4828,
+        "lng": -0.195,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Nuneaton",
+        "lat": 52.523,
+        "lng": -1.468,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Ealing",
+        "lat": 51.5175,
+        "lng": -0.2988,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Aylesbury",
+        "lat": 51.8168,
+        "lng": -0.8124,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Edmonton",
+        "lat": 51.6154,
+        "lng": -0.0708,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Saint Albans",
+        "lat": 51.755,
+        "lng": -0.336,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Burnley",
+        "lat": 53.789,
+        "lng": -2.248,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Batley",
+        "lat": 53.7167,
+        "lng": -1.6356,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Scunthorpe",
+        "lat": 53.5809,
+        "lng": -0.6502,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Dudley",
+        "lat": 52.508,
+        "lng": -2.089,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Brixton",
+        "lat": 51.4575,
+        "lng": -0.1175,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Southall",
+        "lat": 51.5111,
+        "lng": -0.3756,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Paisley",
+        "lat": 55.8456,
+        "lng": -4.4239,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Chatham",
+        "lat": 51.37,
+        "lng": 0.52,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "East Ham",
+        "lat": 51.5323,
+        "lng": 0.0554,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Weston-super-Mare",
+        "lat": 51.346,
+        "lng": -2.977,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Carlisle",
+        "lat": 54.8947,
+        "lng": -2.9364,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "South Shields",
+        "lat": 54.995,
+        "lng": -1.43,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "East Kilbride",
+        "lat": 55.7644,
+        "lng": -4.1769,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Burton upon Trent",
+        "lat": 52.8019,
+        "lng": -1.6367,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Harrogate",
+        "lat": 53.9919,
+        "lng": -1.5378,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Crewe",
+        "lat": 53.099,
+        "lng": -2.44,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Lowestoft",
+        "lat": 52.48,
+        "lng": 1.75,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Rugby",
+        "lat": 52.37,
+        "lng": -1.26,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Chingford",
+        "lat": 51.623,
+        "lng": 0.009,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Uxbridge",
+        "lat": 51.5404,
+        "lng": -0.4778,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Walsall",
+        "lat": 52.58,
+        "lng": -1.98,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Grays",
+        "lat": 51.475,
+        "lng": 0.33,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Walton upon Thames",
+        "lat": 51.3868,
+        "lng": -0.4133,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Thornton Heath",
+        "lat": 51.4002,
+        "lng": -0.1086,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Finchley",
+        "lat": 51.599,
+        "lng": -0.187,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Kensington",
+        "lat": 51.5,
+        "lng": -0.19,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Boston",
+        "lat": 52.974,
+        "lng": -0.0214,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Paignton",
+        "lat": 50.4353,
+        "lng": -3.5625,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Waterlooville",
+        "lat": 50.88,
+        "lng": -1.03,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Guiseley",
+        "lat": 53.875,
+        "lng": -1.706,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Hornchurch",
+        "lat": 51.5565,
+        "lng": 0.2128,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Mitcham",
+        "lat": 51.4009,
+        "lng": -0.1517,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Feltham",
+        "lat": 51.4496,
+        "lng": -0.4089,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Stourbridge",
+        "lat": 52.4575,
+        "lng": -2.1479,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Rochester",
+        "lat": 51.375,
+        "lng": 0.5,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Dewsbury",
+        "lat": 53.691,
+        "lng": -1.633,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Acton",
+        "lat": 51.5135,
+        "lng": -0.2707,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Twickenham",
+        "lat": 51.449,
+        "lng": -0.337,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Wrecsam",
+        "lat": 53.046,
+        "lng": -2.993,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Ellesmere Port",
+        "lat": 53.279,
+        "lng": -2.897,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Bangor",
+        "lat": 54.66,
+        "lng": -5.67,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Taunton",
+        "lat": 51.019,
+        "lng": -3.1,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Loughborough",
+        "lat": 52.7725,
+        "lng": -1.2078,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Barking",
+        "lat": 51.54,
+        "lng": 0.08,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Edgware",
+        "lat": 51.6185,
+        "lng": -0.2729,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Littlehampton",
+        "lat": 50.8094,
+        "lng": -0.5409,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Ruislip",
+        "lat": 51.576,
+        "lng": -0.433,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Streatham",
+        "lat": 51.4279,
+        "lng": -0.1235,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Royal Tunbridge Wells",
+        "lat": 51.132,
+        "lng": 0.263,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Bebington",
+        "lat": 53.35,
+        "lng": -3.003,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Macclesfield",
+        "lat": 53.25,
+        "lng": -2.13,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Wellingborough",
+        "lat": 52.3028,
+        "lng": -0.6944,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Kettering",
+        "lat": 52.3931,
+        "lng": -0.7229,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Braintree",
+        "lat": 51.878,
+        "lng": 0.55,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Royal Leamington Spa",
+        "lat": 52.2919,
+        "lng": -1.5358,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Barrow in Furness",
+        "lat": 54.1108,
+        "lng": -3.2261,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Dunfermline",
+        "lat": 56.0719,
+        "lng": -3.4393,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Altrincham",
+        "lat": 53.3838,
+        "lng": -2.3547,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Lancaster",
+        "lat": 54.0489,
+        "lng": -2.8014,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Crosby",
+        "lat": 53.4872,
+        "lng": -3.0343,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Bootle",
+        "lat": 53.4457,
+        "lng": -2.9891,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Stratford",
+        "lat": 51.5423,
+        "lng": -0.0026,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Folkestone",
+        "lat": 51.0792,
+        "lng": 1.1794,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Cumbernauld",
+        "lat": 55.945,
+        "lng": -3.994,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Andover",
+        "lat": 51.208,
+        "lng": -1.48,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Neath",
+        "lat": 51.66,
+        "lng": -3.81,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Rowley Regis",
+        "lat": 52.488,
+        "lng": -2.05,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Scarborough",
+        "lat": 54.2825,
+        "lng": -0.4,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Leith",
+        "lat": 55.98,
+        "lng": -3.17,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Yeovil",
+        "lat": 50.9452,
+        "lng": -2.637,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Eltham",
+        "lat": 51.451,
+        "lng": 0.052,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Hampstead",
+        "lat": 51.5541,
+        "lng": -0.1744,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Sutton in Ashfield",
+        "lat": 53.125,
+        "lng": -1.261,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Morden",
+        "lat": 51.4015,
+        "lng": -0.1949,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Barnet",
+        "lat": 51.6444,
+        "lng": -0.1997,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Stretford",
+        "lat": 53.4466,
+        "lng": -2.3086,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Beckenham",
+        "lat": 51.408,
+        "lng": -0.022,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Greenford",
+        "lat": 51.5299,
+        "lng": -0.3488,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Cheshunt",
+        "lat": 51.702,
+        "lng": -0.035,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Kirkby",
+        "lat": 53.48,
+        "lng": -2.89,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Salisbury",
+        "lat": 51.07,
+        "lng": -1.79,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Ashton",
+        "lat": 53.4897,
+        "lng": -2.0952,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Surbiton",
+        "lat": 51.394,
+        "lng": -0.307,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Castleford",
+        "lat": 53.716,
+        "lng": -1.356,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Catford",
+        "lat": 51.4452,
+        "lng": -0.0207,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Worksop",
+        "lat": 53.3042,
+        "lng": -1.1244,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Morley",
+        "lat": 53.7492,
+        "lng": -1.6023,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Merthyr Tudful",
+        "lat": 51.743,
+        "lng": -3.378,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Middleton",
+        "lat": 53.555,
+        "lng": -2.187,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Fleet",
+        "lat": 51.2834,
+        "lng": -0.8456,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Fareham",
+        "lat": 50.85,
+        "lng": -1.18,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Urmston",
+        "lat": 53.4487,
+        "lng": -2.3747,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Sutton",
+        "lat": 51.3656,
+        "lng": -0.1963,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Caerphilly",
+        "lat": 51.578,
+        "lng": -3.218,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Bridgwater",
+        "lat": 51.128,
+        "lng": -2.993,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Newbury",
+        "lat": 51.401,
+        "lng": -1.323,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Welling",
+        "lat": 51.4594,
+        "lng": 0.1097,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Kingswood",
+        "lat": 51.46,
+        "lng": -2.505,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Dunstable",
+        "lat": 51.886,
+        "lng": -0.521,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Ramsgate",
+        "lat": 51.336,
+        "lng": 1.416,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Strood",
+        "lat": 51.393,
+        "lng": 0.478,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Cleethorpes",
+        "lat": 53.5533,
+        "lng": -0.0215,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Pinner",
+        "lat": 51.5932,
+        "lng": -0.3894,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Great Yarmouth",
+        "lat": 52.606,
+        "lng": 1.729,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Ilkeston",
+        "lat": 52.9711,
+        "lng": -1.3092,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Chorley",
+        "lat": 53.653,
+        "lng": -2.632,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Herne Bay",
+        "lat": 51.37,
+        "lng": 1.13,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Bishops Stortford",
+        "lat": 51.872,
+        "lng": 0.1725,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Arnold",
+        "lat": 53.005,
+        "lng": -1.127,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Coalville",
+        "lat": 52.724,
+        "lng": -1.369,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Bletchley",
+        "lat": 51.994,
+        "lng": -0.732,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Leighton Buzzard",
+        "lat": 51.9165,
+        "lng": -0.6617,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Airdrie",
+        "lat": 55.86,
+        "lng": -3.98,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Blyth",
+        "lat": 55.126,
+        "lng": -1.514,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Laindon",
+        "lat": 51.574,
+        "lng": 0.4181,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Llanelli",
+        "lat": 51.684,
+        "lng": -4.163,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Beeston",
+        "lat": 52.927,
+        "lng": -1.215,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Small Heath",
+        "lat": 52.4629,
+        "lng": -1.8542,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Whitley Bay",
+        "lat": 55.0456,
+        "lng": -1.4443,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Denton",
+        "lat": 53.4554,
+        "lng": -2.1122,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "West Bridgford",
+        "lat": 52.932,
+        "lng": -1.127,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Borehamwood",
+        "lat": 51.6578,
+        "lng": -0.2722,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Falkirk",
+        "lat": 56.0011,
+        "lng": -3.7835,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Walkden",
+        "lat": 53.5239,
+        "lng": -2.3991,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Kenton",
+        "lat": 51.5878,
+        "lng": -0.3086,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Bridlington",
+        "lat": 54.0819,
+        "lng": -0.1923,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Billingham",
+        "lat": 54.61,
+        "lng": -1.27,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Grantham",
+        "lat": 52.918,
+        "lng": -0.638,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "North Shields",
+        "lat": 55.0097,
+        "lng": -1.4448,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Hitchin",
+        "lat": 51.947,
+        "lng": -0.283,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Spalding",
+        "lat": 52.7858,
+        "lng": -0.1529,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Rainham",
+        "lat": 51.36,
+        "lng": 0.61,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Letchworth",
+        "lat": 51.978,
+        "lng": -0.23,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Wickford",
+        "lat": 51.6114,
+        "lng": 0.5207,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Huyton",
+        "lat": 53.4111,
+        "lng": -2.8403,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Abingdon",
+        "lat": 51.6717,
+        "lng": -1.2783,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Trowbridge",
+        "lat": 51.32,
+        "lng": -2.208,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Wigston Magna",
+        "lat": 52.5812,
+        "lng": -1.093,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Didcot",
+        "lat": 51.606,
+        "lng": -1.241,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Earley",
+        "lat": 51.433,
+        "lng": -0.933,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Bexleyheath",
+        "lat": 51.459,
+        "lng": 0.138,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Ecclesfield",
+        "lat": 53.4429,
+        "lng": -1.4698,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Darwen",
+        "lat": 53.698,
+        "lng": -2.461,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Prestwich",
+        "lat": 53.5333,
+        "lng": -2.2833,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Pontypridd",
+        "lat": 51.602,
+        "lng": -3.342,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Rutherglen",
+        "lat": 55.828,
+        "lng": -4.214,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Dover",
+        "lat": 51.1295,
+        "lng": 1.3089,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Chichester",
+        "lat": 50.8365,
+        "lng": -0.7792,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Deal",
+        "lat": 51.2226,
+        "lng": 1.4006,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Bicester",
+        "lat": 51.9,
+        "lng": -1.15,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Northolt",
+        "lat": 51.5467,
+        "lng": -0.37,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Wishaw",
+        "lat": 55.7742,
+        "lng": -3.9183,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Carshalton",
+        "lat": 51.3652,
+        "lng": -0.1676,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Bulwell",
+        "lat": 53.001,
+        "lng": -1.197,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Newtownards",
+        "lat": 54.591,
+        "lng": -5.68,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Kendal",
+        "lat": 54.326,
+        "lng": -2.745,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Cramlington",
+        "lat": 55.082,
+        "lng": -1.585,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Bromsgrove",
+        "lat": 52.3353,
+        "lng": -2.0579,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Pont-y-pŵl",
+        "lat": 51.703,
+        "lng": -3.041,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Hanwell",
+        "lat": 51.509,
+        "lng": -0.338,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Frome",
+        "lat": 51.2279,
+        "lng": -2.3215,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Wood Green",
+        "lat": 51.5981,
+        "lng": -0.1149,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Darlaston",
+        "lat": 52.5708,
+        "lng": -2.0457,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Ashington",
+        "lat": 55.181,
+        "lng": -1.568,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Longton",
+        "lat": 52.9877,
+        "lng": -2.1327,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Melton Mowbray",
+        "lat": 52.7661,
+        "lng": -0.886,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Aldridge",
+        "lat": 52.606,
+        "lng": -1.9179,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Farnworth",
+        "lat": 53.5452,
+        "lng": -2.3999,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Highbury",
+        "lat": 51.552,
+        "lng": -0.097,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Cheadle Hulme",
+        "lat": 53.3761,
+        "lng": -2.1897,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Newton Aycliffe",
+        "lat": 54.62,
+        "lng": -1.58,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Bournville",
+        "lat": 52.4299,
+        "lng": -1.9355,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Shenley Brook End",
+        "lat": 52.009,
+        "lng": -0.789,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Consett",
+        "lat": 54.85,
+        "lng": -1.83,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Coulsdon",
+        "lat": 51.3211,
+        "lng": -0.1386,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Bilston",
+        "lat": 52.566,
+        "lng": -2.0728,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Wellington",
+        "lat": 52.7001,
+        "lng": -2.5157,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Bishop Auckland",
+        "lat": 54.663,
+        "lng": -1.676,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Longbridge",
+        "lat": 52.395,
+        "lng": -1.979,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Bloxwich",
+        "lat": 52.614,
+        "lng": -2.004,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Upminster",
+        "lat": 51.5557,
+        "lng": 0.2512,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Rhyl",
+        "lat": 53.321,
+        "lng": -3.48,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Droitwich",
+        "lat": 52.267,
+        "lng": -2.153,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Hindley",
+        "lat": 53.5355,
+        "lng": -2.5658,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Westhoughton",
+        "lat": 53.549,
+        "lng": -2.529,
+        "country": "United Kingdom"
+    },
+    {
+        "city": "Broadstairs",
+        "lat": 51.3589,
+        "lng": 1.4394,
+        "country": "United Kingdom"
+    }
+]

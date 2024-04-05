@@ -51,7 +51,7 @@ if __name__ == "__main__":
     RABBITMQ_MIN_ITERVAL_MS = int(os.environ["RABBITMQ_MIN_ITERVAL_MS"])
     RABBITMQ_MAX_ITERVAL_MS = int(os.environ["RABBITMQ_MAX_ITERVAL_MS"])
 
-    SEED = "rabbitmq"
+    SEED = "$Rabbitmq"
     MANUFACTURER = "RMQ"
     DEVICE_FAMILY = "sx"
 
@@ -62,7 +62,10 @@ if __name__ == "__main__":
         devices[_id] = {
             "serial_number": serial_number,
             "temperature": get_delta_temp(temp_mu, temp_sigma),
-            "last_sent": get_next_interval(RABBITMQ_MIN_ITERVAL_MS,RABBITMQ_MAX_ITERVAL_MS),
+            "last_sent": get_next_interval(
+                RABBITMQ_MIN_ITERVAL_MS,
+                RABBITMQ_MAX_ITERVAL_MS,
+            ),
             "location": location,
         }
 
@@ -88,11 +91,15 @@ if __name__ == "__main__":
                                 serial_number=devices[_id]["serial_number"],
                                 manufacturer=MANUFACTURER,
                                 dev_family=DEVICE_FAMILY,
-                                location=devices[_id]["location"],
+                                location=devices[_id]["location"]["city"],
+                                lat=devices[_id]["location"]["lat"],
+                                lng=devices[_id]["location"]["lng"],
+                                location_key="region",
+                                lat_key="lat",
+                                lng_key="lon",
                                 temperature_key="temp",
                                 manufacturer_key="provider",
                                 dev_family_key="product",
-                                location_key="region",
                                 serial_number_key="serno",
                                 _timestamp_epoch=False,
                             )
