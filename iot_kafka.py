@@ -18,7 +18,7 @@ from confluent_kafka.schema_registry.avro import AvroSerializer
 from utils import (
     sys_exc,
     round_temp,
-    get_delta_temp,
+    get_delta,
     generate_payload,
     get_next_interval,
     set_logging_handler,
@@ -69,7 +69,7 @@ if __name__ == "__main__":
         serial_number, location, temp_mu, temp_sigma = get_details(_id, SEED)
         devices[_id] = {
             "serial_number": serial_number,
-            "temperature": get_delta_temp(temp_mu, temp_sigma),
+            "temperature": get_delta(temp_mu, temp_sigma),
             "last_sent": get_next_interval(
                 KAFKA_MIN_ITERVAL_MS,
                 KAFKA_MAX_ITERVAL_MS,
@@ -107,7 +107,7 @@ if __name__ == "__main__":
                 try:
                     if devices[_id]["last_sent"] < time.time():
                         devices[_id]["temperature"] = round_temp(
-                            devices[_id]["temperature"] + get_delta_temp()
+                            devices[_id]["temperature"] + get_delta()
                         )
                         producer.poll(0)
                         value = generate_payload(

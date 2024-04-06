@@ -8,6 +8,7 @@ INSERT INTO `data-fabric-ALL-devices`
         SPLIT(`key`, '/')[4] AS `product`,
         EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.location') AS `city`,
         'MQTT' AS `device_type`,
-        EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.latitude') + ',' + EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.longitude') AS `location`
+        CAST(EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.latitude') AS DOUBLE) AS `latitude`,
+        CAST(EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.longitude') AS DOUBLE) AS `longitude`
     FROM `data-fabric-mqtt-devices`
     PARTITION BY SPLIT(`key`, '/')[5];

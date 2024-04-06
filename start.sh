@@ -1,72 +1,87 @@
 #!/bin/bash
 
+function logging() {
+  TIMESTAMP=`date "+%Y-%m-%d %H:%M:%S.000"`
+  LEVEL=${2-"INFO"}
+  if [[ $3 == "-n" ]]; then
+    echo -n "[start] $TIMESTAMP [$LEVEL]: $1"
+  else
+    echo "[start] $TIMESTAMP [$LEVEL]: $1"
+  fi
+}
+
 echo ""
-echo "Killing processes..."
+logging "Killing processes"
 ps aux  |  grep -i  ' iot_'  |  awk '{print $2}'  |  xargs kill -9 >/dev/null 2>&1 &
 ps aux  |  grep -i  ' coap_server.py'  |  awk '{print $2}'  |  xargs kill -9 >/dev/null 2>&1 &
+ps aux  |  grep -i  ' ksqldb_provisioning.py'  |  awk '{print $2}'  |  xargs kill -9 >/dev/null 2>&1 &
+ps aux  |  grep -i  ' elastic_geopoint.py'  |  awk '{print $2}'  |  xargs kill -9 >/dev/null 2>&1 &
 
-echo ""
-echo "Starting docker compose..."
+logging "Loading environment variables"
 source .env
-docker compose up -d
+
+logging "Starting docker compose"
+if ! docker compose up -d --build ; then
+    logging "Please start Docker Desktop!" "ERROR"
+    exit -1
+fi
 
 # Waiting services to be ready
-echo ""
+logging "Waiting Schema Registry to be ready" "INFO" -n
 while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' http://localhost:8081)" != "200" ]]
 do
-    echo "Waiting Schema Registry to be ready..."
-    sleep 2
+    echo -n "."
+    sleep 1
 done
 
 echo ""
+logging "Waiting ksqlDB Cluster to be ready" "INFO" -n
 while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' http://localhost:8088/info)" != "200" ]]
 do
-    echo "Waiting ksqlDB Cluster to be ready..."
-    sleep 2
+    echo -n "."
+    sleep 1
 done
 
 echo ""
+logging "Waiting Connect Cluster #1 to be ready" "INFO" -n
 while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' http://localhost:8083)" != "200" ]]
 do
-    echo "Waiting Connect Cluster 1 to be ready..."
-    sleep 2
+    echo -n "."
+    sleep 1
 done
 
 echo ""
+logging "Waiting Connect Cluster #2 to be ready" "INFO" -n
 while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' http://localhost:18083)" != "200" ]]
 do
-    echo "Waiting Connect Cluster 2 to be ready..."
-    sleep 2
+    echo -n "."
+    sleep 1
 done
 
 echo ""
+logging "Waiting Confluent Control Center to be ready" "INFO" -n
 while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' http://localhost:9021)" != "200" ]]
 do
-    echo "Waiting Confluent Control Center to be ready..."
-    sleep 2
+    echo -n "."
+    sleep 1
 done
 
 echo ""
-echo "Loading environment variables"
-source .env
-
-echo ""
-echo "Activating Virtual Environment / install Python requirements"
+logging "Activating Virtual Environment / installing Python requirements"
 source .venv/bin/activate
 pip install -r requirements.txt
 sleep 1
 
 # Kafka IoT Device
-echo ""
-echo "Starting Kafka IoT device"
-python3 iot_kafka.py >/dev/null 2>&1 &
+logging "Starting Kafka IoT device"
+python3 iot_kafka.py > ./logs/iot_kafka.log 2>&1 &
 
 # HTTP IoT Device
-echo ""
-echo "Starting HTTP IoT device"
-python3 iot_http.py >/dev/null 2>&1 &
+logging "Starting HTTP IoT device"
+python3 iot_http.py > ./logs/iot_http.log 2>&1 &
 
 # SysLog Connector
+logging "Starting Syslog Connector"
 curl -i -X PUT http://localhost:8083/connectors/syslog_source/config \
      -H "Content-Type: application/json" \
      -d '{
@@ -84,11 +99,13 @@ sleep 5
 echo ""
 curl -s http://localhost:8083/connectors/syslog_source/status
 sleep 1
+
 echo ""
-echo "Starting SysLog IoT device"
-python3 iot_syslog.py >/dev/null 2>&1 &
+logging "Starting SysLog IoT device"
+python3 iot_syslog.py > ./logs/iot_syslog.log 2>&1 &
 
 # Spooldir Connector / Iot Device
+logging "Starting Spooldir Connector"
 curl -i -X PUT http://localhost:18083/connectors/spooldir_source/config \
      -H "Content-Type: application/json" \
      -d '{
@@ -105,17 +122,19 @@ curl -i -X PUT http://localhost:18083/connectors/spooldir_source/config \
         }'
 sleep 5
 echo ""
-sleep 1
-echo ""
-echo "Starting CoAP Server"
-python3 coap_server.py >/dev/null 2>&1 &
-sleep 2
-echo ""
-echo "Starting CoAP IoT device"
-python3 iot_coap.py >/dev/null 2>&1 &
 curl -s http://localhost:18083/connectors/spooldir_source/status
+sleep 1
+
+echo ""
+logging "Starting CoAP Server"
+python3 coap_server.py > ./logs/coap_server.log 2>&1 &
+sleep 2
+
+logging "Starting CoAP IoT device"
+python3 iot_coap.py > ./logs/iot_coap.log 2>&1 &
 
 # MQTT Connector / Iot Device
+logging "Starting MQTT Connector"
 curl -i -X PUT http://localhost:8083/connectors/mqtt_source/config \
      -H "Content-Type: application/json" \
      -d '{
@@ -129,15 +148,17 @@ sleep 5
 echo ""
 curl -s http://localhost:8083/connectors/mqtt_source/status
 sleep 1
+
 echo ""
-echo "Starting MQTT IoT device"
-python3 iot_mqtt.py >/dev/null 2>&1 &
+logging "Starting MQTT IoT device"
+python3 iot_mqtt.py > ./logs/iot_mqtt.log 2>&1 &
 
 # RabbitMQ Connector / Iot Device
-echo ""
-echo "Starting RabbitMQ IoT device"
-python3 iot_rabbitmq.py >/dev/null 2>&1 &
+logging "Starting RabbitMQ IoT device"
+python3 iot_rabbitmq.py > ./logs/iot_rabbitmq.log 2>&1 &
 sleep 3
+
+logging "Starting RabbitMQ Connector"
 curl -i -X PUT http://localhost:8083/connectors/rabbitmq_source/config \
      -H "Content-Type: application/json" \
      -d '{
@@ -151,16 +172,16 @@ curl -i -X PUT http://localhost:8083/connectors/rabbitmq_source/config \
 sleep 5
 echo ""
 curl -s http://localhost:8083/connectors/rabbitmq_source/status
+sleep 1
 
 # ksqlDB Statements
 echo ""
-echo ""
-echo "Submit ksqlDB statements"
+logging "Submitting ksqlDB statements"
 sleep 10
 python3 ksqldb_provisioning.py
 
 # Elastic Connector
-echo ""
+logging "Starting Elastic Connector"
 curl -i -X PUT http://localhost:8083/connectors/elastic_sink/config \
      -H "Content-Type: application/json" \
      -d '{
@@ -180,9 +201,10 @@ curl -i -X PUT http://localhost:8083/connectors/elastic_sink/config \
 sleep 5
 echo ""
 curl -s http://localhost:8083/connectors/elastic_sink/status
+echo ""
 
 # Postgres Connector
-echo ""
+logging "Starting Postgres Connector"
 curl -i -X PUT http://localhost:8083/connectors/postgres_sink/config \
      -H "Content-Type: application/json" \
      -d '{
@@ -198,13 +220,24 @@ curl -i -X PUT http://localhost:8083/connectors/postgres_sink/config \
 sleep 5
 echo ""
 curl -s http://localhost:8083/connectors/postgres_sink/status
+echo ""
 
-echo ""
-echo ""
-echo "Creating Kibana/Elastic Dashboard"
+sleep 5
+python3 elastic_geopoint.py &
+sleep 5
+
+logging "Creating Kibana/Elastic Dashboard"
 sleep 10
+# POST http://localhost:5601/api/saved_objects/_export {"type": "dashboard","includeReferencesDeep": true}
 curl -X POST "http://localhost:5601/api/saved_objects/_import?createNewCopies=true" -H "kbn-xsrf: true" --form file=@kibana_dashboard.ndjson
-echo ""
-echo ""
+
+
+# Open browser with C3, Kibana and PGAdmin consoles
+python3 -m webbrowser -t "http://localhost:5050"
+python3 -m webbrowser -t "http://localhost:9021/clusters"
+python3 -m webbrowser -t "http://localhost:5601/app/dashboards#/view/33a1c386-e80a-4aa5-87a2-18382f186c0b"
 
 deactivate
+
+logging "Demo successfully started"
+echo ""

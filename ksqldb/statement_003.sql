@@ -8,6 +8,7 @@ INSERT INTO `data-fabric-ALL-devices`
         `family` AS `product`,
         `pos` AS `city`,
         'COAP' AS `device_type`,
-        CAST(`lat` AS VARCHAR) + ',' + CAST(`long` AS VARCHAR) AS `location`
+        `lat` AS `latitude`,
+        `long` AS `longitude`
     FROM `data-fabric-coap-devices`
     PARTITION BY `sn`;

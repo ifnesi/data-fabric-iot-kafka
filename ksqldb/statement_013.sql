@@ -9,6 +9,7 @@ INSERT INTO `data-fabric-ALL-devices`
         `PRODUCT` AS `product`,
         `REGION` AS `city`,
         'KAFKA' AS `device_type`,
-        CAST(`LAT` AS VARCHAR) + ',' + CAST(`LNG` AS VARCHAR) AS `location`
+        `LAT` AS `latitude`,
+        `LNG` AS `longitude`
     FROM `data-fabric-kafka-devices`
     PARTITION BY `ID`;

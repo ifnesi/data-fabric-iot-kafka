@@ -8,6 +8,7 @@ INSERT INTO `data-fabric-ALL-devices`
         `prd` AS `product`,
         `loc` AS `city`,
         'HTTP' AS `device_type`,
-        CAST(`lt` AS VARCHAR) + ',' + CAST(`lg` AS VARCHAR) AS `location`
+        `lt` AS `latitude`,
+        `lg` AS `longitude`
     FROM `data-fabric-http-devices`
     PARTITION BY `sn`;

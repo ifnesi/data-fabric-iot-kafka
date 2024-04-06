@@ -37,7 +37,7 @@ def round_temp(t: float) -> float:
     return float(f"{t:.4f}")
 
 
-def get_delta_temp(mu: float = 0, sigma: float = 0.01) -> float:
+def get_delta(mu: float = 0, sigma: float = 0.01) -> float:
     return round_temp(random.gauss(mu, sigma))
 
 
@@ -50,7 +50,7 @@ def generate_serial_number(
     seed: str,
     length: int = 12,
 ) -> str:
-    return hashlib.sha1(f"{id}_{seed}".encode("utf-8")).hexdigest()[:length]
+    return hashlib.sha256(f"{id}_{seed}".encode("utf-8")).hexdigest()[-length:]
 
 
 @lru_cache
@@ -76,11 +76,14 @@ def get_details(
     seed: str,
 ) -> tuple:
     serial_number = generate_serial_number(id, seed)
-    seed_loc = int(serial_number, 16)
+    seed_sn = int(serial_number, 16)
     locations = get_locations()
-    location = locations[seed_loc % len(locations)]
-    temp_mu = 31 - seed_loc % 19
-    temp_sigma = 0.05
+    location = locations[seed_sn % len(locations)]
+    seed_loc = int(
+        hashlib.sha256(location["city"].encode("utf-8")).hexdigest()[-12:], 16
+    )
+    temp_mu = 37 - seed_loc % 17
+    temp_sigma = 1
     return (
         serial_number,
         location,

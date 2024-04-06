@@ -8,6 +8,7 @@ INSERT INTO `data-fabric-ALL-devices`
         `deviceProduct` AS `product`,
         `extension`['deviceDirection'] AS `city`,
         'SYSLOG' AS `device_type`,
-        `extension`['cfp2'] + ',' + `extension`['cfp3'] AS `location`
+        CAST(`extension`['cfp2'] AS DOUBLE) AS `latitude`,
+        CAST(`extension`['cfp3'] AS DOUBLE) AS `longitude`
     FROM `data-fabric-syslog-devices`
     PARTITION BY `deviceVersion`;

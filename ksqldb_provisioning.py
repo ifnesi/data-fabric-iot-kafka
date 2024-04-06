@@ -1,5 +1,6 @@
 import os
 import glob
+import json
 import time
 import logging
 import requests
@@ -17,7 +18,7 @@ if __name__ == "__main__":
     FILE_APP = os.path.splitext(os.path.split(__file__)[-1])[0]
     set_logging_handler(FILE_APP)
 
-    logging.info("Submitting ksqlDB statements...")
+    logging.info("Submitting ksqlDB statements")
     for file in sorted(glob.glob(os.path.join("ksqldb", "statement_*.sql"))):
         statement = flat_file(file)
         print("")
@@ -40,17 +41,19 @@ if __name__ == "__main__":
             if response.status_code == 200:
                 log = logging.info
                 status_code = response.status_code
-                response = response.json()
+                response = json.dumps(response.json(), indent=3)
             else:
                 log = logging.error
                 status_code = response.status_code
-                response = response.json()
+                response = json.dumps(response.json(), indent=3)
+
         except Exception as err:
             log = logging.critical
             status_code = "50X"
             response = err
+
         finally:
             print("")
             log(f"Response [{status_code}]:\n{response}")
 
-        time.sleep(3)
+        time.sleep(5)

@@ -7,7 +7,8 @@ CREATE STREAM IF NOT EXISTS `data-fabric-ALL-devices` (
     `product` VARCHAR,
     `city` VARCHAR,
     `device_type` VARCHAR,
-    `location` VARCHAR
+    `latitude` DOUBLE,
+    `longitude` DOUBLE
 ) WITH (
     KAFKA_TOPIC = 'data-fabric-ALL-devices',
     PARTITIONS=1,

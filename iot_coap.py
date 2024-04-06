@@ -13,7 +13,7 @@ from aiocoap.error import NetworkError
 from utils import (
     sys_exc,
     round_temp,
-    get_delta_temp,
+    get_delta,
     generate_payload,
     get_next_interval,
     set_logging_handler,
@@ -42,7 +42,7 @@ async def main():
         serial_number, location, temp_mu, temp_sigma = get_details(_id, SEED)
         devices[_id] = {
             "serial_number": serial_number,
-            "temperature": get_delta_temp(temp_mu, temp_sigma),
+            "temperature": get_delta(temp_mu, temp_sigma),
             "last_sent": get_next_interval(
                 COAP_MIN_ITERVAL_MS,
                 COAP_MAX_ITERVAL_MS,
@@ -59,7 +59,7 @@ async def main():
                 try:
                     if devices[_id]["last_sent"] < time.time():
                         devices[_id]["temperature"] = round_temp(
-                            devices[_id]["temperature"] + get_delta_temp()
+                            devices[_id]["temperature"] + get_delta()
                         )
                         message = generate_payload(
                             devices[_id]["temperature"],

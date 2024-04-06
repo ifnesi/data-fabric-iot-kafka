@@ -11,7 +11,7 @@ from dotenv import load_dotenv, find_dotenv
 from utils import (
     sys_exc,
     round_temp,
-    get_delta_temp,
+    get_delta,
     generate_payload,
     get_next_interval,
     set_logging_handler,
@@ -59,7 +59,7 @@ def connect_mqtt(
         logging.info(f"Disconnected with result code: {rc}")
         reconnect_count, reconnect_delay = 0, FIRST_RECONNECT_DELAY
         while reconnect_count < MAX_RECONNECT_COUNT:
-            logging.info(f"Reconnecting in {reconnect_delay} seconds...")
+            logging.info(f"Reconnecting in {reconnect_delay} seconds")
             time.sleep(reconnect_delay)
 
             try:
@@ -72,7 +72,7 @@ def connect_mqtt(
             reconnect_delay *= RECONNECT_RATE
             reconnect_delay = min(reconnect_delay, MAX_RECONNECT_DELAY)
             reconnect_count += 1
-        logging.info(f"Reconnect failed after {reconnect_count} attempts. Exiting...")
+        logging.info(f"Reconnect failed after {reconnect_count} attempts. Exiting")
 
     client = mqtt.Client(
         mqtt.CallbackAPIVersion.VERSION2,
@@ -114,7 +114,7 @@ if __name__ == "__main__":
         serial_number, location, temp_mu, temp_sigma = get_details(_id, SEED)
         devices[_id] = {
             "serial_number": serial_number,
-            "temperature": get_delta_temp(temp_mu, temp_sigma),
+            "temperature": get_delta(temp_mu, temp_sigma) * 9 / 5 + 32,
             "last_sent": get_next_interval(
                 MQTT_MIN_ITERVAL_MS,
                 MQTT_MAX_ITERVAL_MS,
@@ -137,7 +137,7 @@ if __name__ == "__main__":
                     try:
                         if devices[_id]["last_sent"] < time.time():
                             devices[_id]["temperature"] = round_temp(
-                                devices[_id]["temperature"] + get_delta_temp()
+                                devices[_id]["temperature"] + get_delta()
                             )
                             message = generate_payload(
                                 devices[_id]["temperature"],
