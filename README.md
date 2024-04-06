@@ -1,32 +1,192 @@
 ![image](docs/logo.png)
 
 # data-fabric-iot-kafka
-THIS IS A WORKING IN PROGRESS! Its is not ready yet.
+In this simple but comprehensive demo, Confluent Platform acts as true central nervous system, ingesting data from several edge devices. These devices send important information like temperature and GPS location, but they use many different communication and application protocols, such as [MQTT](https://en.wikipedia.org/wiki/MQTT), [HTTP](https://en.wikipedia.org/wiki/HTTP), [Kafka](https://en.wikipedia.org/wiki/Apache_Kafka), [CoAP](https://en.wikipedia.org/wiki/Constrained_Application_Protocol), [Syslog](https://en.wikipedia.org/wiki/Syslog), and [RabbitMQ](https://en.wikipedia.org/wiki/RabbitMQ) (just to name a few). This diversity reflects the IoT world's nature, where a single standard is more the exception than the norm, requiring a robust, highly scalable, and adaptable data streaming platform.
 
-Demo is composed of:
-* [PostgreSQL](https://www.postgresql.org/) database
-* [pgAdmin](https://www.pgadmin.org/) to access the PostgreSQL database
-* Data Streaming Platform ([Confluent Platform](https://docs.confluent.io/platform/current/platform.html))
-* [Schema Registry](https://docs.confluent.io/platform/current/schema-registry/index.html)
-* [Confluent Control Center](https://docs.confluent.io/platform/current/control-center/index.html)
-* [ksqlDB](https://docs.confluent.io/platform/current/ksqldb/index.html) cluster to process the data received by the source connector
-* [Connect cluster](https://docs.confluent.io/platform/current/connect/userguide.html)
-* [Elasticsearch](https://www.elastic.co/elasticsearch)
-* [Kibana](https://www.elastic.co/kibana)
-* Connectors:
-  * [Syslog Source Connector for Confluent Platform](https://docs.confluent.io/kafka-connectors/syslog/current/overview.html)
-  * [MQTT Source Connector for Confluent Platform](https://docs.confluent.io/kafka-connectors/mqtt/current/mqtt-source-connector/overview.html)
-  * [RabbitMQ Source Connector for Confluent Platform](https://docs.confluent.io/kafka-connectors/rabbitmq-source/current/overview.html)
-  * [Spool Dir Connectors for Confluent Platform](https://docs.confluent.io/kafka-connectors/spooldir/current/overview.html)
-  * [Elasticsearch Service Sink Connector for Confluent Platform](https://docs.confluent.io/kafka-connectors/elasticsearch/current/overview.html)
-  * [JDBC Sink Connector for Confluent Platform](https://docs.confluent.io/kafka-connectors/jdbc/current/sink-connector/overview.html)
+Confluent Platform stands out because it can take in data from all these different sources in real time, thanks to its wide range of connectors. Once the data arrives, it's transformed into a common format using ksqlDB, a tool for processing data streams. This makes the data easier to understand and use decoupling upstream applications. After processing, the data is sent to Elasticsearch, where it's displayed on a Kibana dashboard. This gives a clear view of the data in real time. The data is also saved in PostgresDB for later use. This demonstration underlines the Confluent Platform's strength as a data streaming backbone, capable of knitting together a complex tapestry of IoT devices and protocols into a cohesive and efficient data fabric architecture.
+
+## Overview
+![image](docs/demo_diagram_overview.jpeg)
 
 ## Software Requirements
 * [curl](https://curl.se/)
 * [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 * [Python 3.8+](https://www.python.org/)
 
-### Python libs and virtual environment
+## How it works
+With exception of the python scripts emulating the edge devices, the demo runs all in Docker. Here are the components:
+* Data Streaming Platform ([Confluent Platform](https://docs.confluent.io/platform/current/platform.html)): full-scale streaming service that enhances Apache Kafka with added tools and functionalities for real-time data processing and system management
+* [Confluent Control Center](https://docs.confluent.io/platform/current/control-center/index.html): management and monitoring tool for overseeing Kafka, connect and ksqlDB clusters and the data flowing through them within the Confluent Platform, accessible through http://localhost:9021
+* [Schema Registry](https://docs.confluent.io/platform/current/schema-registry/index.html): provides a centralized repository for storing and managing the schemas of Kafka topics, ensuring data consistency and compatibility across the system
+* [ksqlDB](https://docs.confluent.io/platform/current/ksqldb/index.html): process in real-time the data received by the source connectors
+* [Confluent Platform HTTP Rest Proxy](https://docs.confluent.io/platform/current/kafka-rest/index.html): provides a RESTful interface to a Kafka cluster, allowing you to produce and consume messages over HTTP, making Kafka accessible from any language that supports HTTP requests
+* [Eclipse Mosquitto](https://mosquitto.org/): open-source message broker that implements the MQTT protocol, used for lightweight and efficient messaging in various IoT and real-time applications
+* [Elasticsearch](https://www.elastic.co/elasticsearch): distributed, open-source search and analytics engine designed for horizontal scalability, reliability, and easy management, primarily used for full-text search, structured search, and analytics
+* [Kibana](https://www.elastic.co/kibana): open-source data visualization dashboard for Elasticsearch, used for searching, viewing, and interacting with data stored in Elasticsearch indices through a variety of charts, tables, and maps, accessible through http://localhost:5601
+* [PostgreSQL](https://www.postgresql.org/): open-source, advanced, object-relational database system known for its reliability, robustness, and performance, with strong support for extensibility and SQL standards compliance
+* [pgAdmin](https://www.pgadmin.org/): open-source administration and development platform for PostgreSQL, providing a graphical interface to manage, maintain, and develop PostgreSQL databases, accessible through http://localhost:5050
+* Confluent Source Connectors:
+  * [Syslog Source Connector for Confluent Platform](https://docs.confluent.io/kafka-connectors/syslog/current/overview.html): acts as a Syslog server to receive data from the Syslog edge devices
+  * [MQTT Source Connector for Confluent Platform](https://docs.confluent.io/kafka-connectors/mqtt/current/mqtt-source-connector/overview.html): connects to the MQTT broker subscribing to the topics published by the MQTT edge devices
+  * [RabbitMQ Source Connector for Confluent Platform](https://docs.confluent.io/kafka-connectors/rabbitmq-source/current/overview.html): connects to the RabbitMQ broker subscribing to the queues published by the RabbitMQ edge devices
+  * [Spool Dir Connectors for Confluent Platform](https://docs.confluent.io/kafka-connectors/spooldir/current/overview.html): processes all logs by the CoAP server
+* Confluent Sink Connectors:
+  * [Elasticsearch Service Sink Connector for Confluent Platform](https://docs.confluent.io/kafka-connectors/elasticsearch/current/overview.html)
+  * [JDBC Sink Connector for Confluent Platform](https://docs.confluent.io/kafka-connectors/jdbc/current/sink-connector/overview.html)
+* Python scripts:
+  * `coap_server.py`: emulate a CoAP Server. All data transmitted by the CoAP devices are logged into files under the folder `./coap-data/` to then be processed by the Spool Dir source connector
+  * `iot_coap.py`: emulate edge devices transmitting data via CoAP:
+  ```
+   Value = {
+      "timestamp": 1712403220046,  # EPOCH timestamp
+      "tmp": 28.9552,              # Temperature in C
+      "manufacturer": "CoAP",      # Device manufacturer name
+      "family": "CPd",             # Device product family
+      "pos": "Morley",             # Location of the device
+      "lat": 53.7492,              # Latitude
+      "long": -1.6023,             # Longitude
+      "sn": "cb05503d6cdc"         # Device serial number
+   }
+  ```
+  * `iot_http.py`: emulate edge devices transmitting data via HTTP to the Confluent Platform HTTP Rest Proxy:
+  ```
+   Value = {
+      "tm": 1712402959641,      # EPOCH timestamp
+      "temp": 36.8015,          # Temperature in C
+      "mnf": "KafkaHttpTemp",   # Device manufacturer name
+      "prd": "Kh1",             # Device product family
+      "loc": "Hammersmith",     # Location of the device
+      "lt": 51.4928,            # Latitude
+      "lg": -0.2229,            # Longitude
+      "sn": "e40b8dbd884e"      # Device serial number
+   }
+  ```
+  * `iot_kafka.py`: emulate edge devices transmitting data directly to Confluent Platform using the Kafka protocol:
+  ```
+   Key = 22962b1b74aa                            # Device serial number
+   Value = {
+      "datetime": "2024-04-06 11:29:42.492824",  # Timestamp
+      "temperature": 37.6163,                    # Temperature in C
+      "manufacturer": "KafkaTemp",               # Device manufacturer name
+      "product": "K1",                           # Device product family
+      "region": "Highbury",                      # Location of the device
+      "lat": 51.552,                             # Latitude
+      "lng": -0.097,                             # Longitude
+      "id": "22962b1b74aa"                       # Device serial number
+   }
+  ```
+  * `iot_mqtt.py`: emulate edge devices transmitting data via the MQTT protocol:
+  ```
+   Topic = python/mqtt/PicoQ/Q1/ac1867dffb73  # python/mqtt/<Device manufacturer name>/<Device product family>/<Device serial number>
+   Value = {
+      "epoch": "2024-04-06 11:28:14.619587",  # Timestamp
+      "temperature": 93.609,                  # Temperature in F 
+      "location": "Rochester",                # Location of the device
+      "latitude": 51.375,                     # Latitude
+      "longitude": 0.5,                       # Longitude
+      "unit": "F"                             # Unit of measurement
+   }
+  ```
+  * `iot_rabbitmq.py`: emulate edge devices transmitting data via the RabbitMQ protocol:
+  ```
+   Value = {
+      "timestamp": "2024-04-06 11:31:16.492909",  # Timestamp
+      "temp": 18.1642,                            # Temperature in C
+      "provider": "RMQ",                          # Device manufacturer name
+      "product": "sx",                            # Device product family
+      "region": "Saint Albans",                   # Location of the device
+      "lat": 51.755,                              # Latitude
+      "lon": -0.336,                              # Longitude
+      "serno": "d45af1c720a1"                     # Device serial number
+   }
+  ```
+  * `iot_syslog.py`: emulate edge devices transmitting data via Syslog (CEF format):
+  ```
+   Device Transmits data in this format:
+      <13>Apr 06 12:27:15 P3W32CDKHC CEF:0|SysTemp|SysIotLog|c007cd785cf2|100|Telemetry|5|cfp1=36.6724 cfp1Label=C cfp2=51.623 cfp2Label=lat cfp3=0.009 cfp3Label=lon deviceDirection=Chingford
+   The Syslog Source Connector have it converted to:
+      {
+      "name": {
+         "string": "Telemetry"
+      },
+      "type": "CEF",
+      "message": null,
+      "host": {
+         "string": "P3W32CDKHC"
+      },
+      "version": {
+         "int": 0
+      },
+      "level": {
+         "int": 5
+      },
+      "tag": null,
+      "extension": {
+         "map": {
+            "cfp1": "36.6724",                # Temperature in C
+            "cfp1Label": "C",                 # Unit of measurement
+            "cfp2": "51.623",                 # Latitude
+            "cfp2Label": "lat",
+            "cfp3": "0.009",                  # Longitude
+            "cfp3Label": "lon",
+            "deviceDirection": "Chingford"    # Location of the device
+         }
+      },
+      "severity": {
+         "string": "5"
+      },
+      "appName": null,
+      "facility": {
+         "int": 1
+      },
+      "remoteAddress": {
+         "string": "192.168.65.1"
+      },
+      "rawMessage": {
+         "string": "<13>Apr 06 12:27:15 P3W32CDKHC CEF:0|SysTemp|SysIotLog|c007cd785cf2|100|Telemetry|5|cfp1=36.6724 cfp1Label=C cfp2=51.623 cfp2Label=lat cfp3=0.009 cfp3Label=lon deviceDirection=Chingford"
+      },
+      "processId": null,
+      "messageId": null,
+      "structuredData": null,
+      "deviceVendor": {
+         "string": "SysTemp"                  # Device manufacturer name
+      },
+      "deviceProduct": {
+         "string": "SysIotLog"                # Device product family
+      },
+      "deviceVersion": {
+         "string": "c007cd785cf2"             # Device serial number
+      },
+      "deviceEventClassId": {
+         "string": "100"
+      },
+      "timestamp": {
+         "long": 1712406435000                # EPOCH timestamp
+      },
+      "receivedDate": {
+         "long": 1712402835031
+      }
+   }
+  ```
+  * `ksqldb_provisioning.py`: submit ksql statements to the ksqlDB cluster to normalize the data tramsitted byt he edge devices into a single structure (AVRO schema). For details about the ksql statements they are located under the folder `./ksqldb/`
+  * `elastic_geopoint.py`: script to add a new field into the Elasticsearch table. Field name is `gps` data type `geo_point` containing the latitude and longitude as reported by the edge devices
+
+### Diagram overview with the payload and data flow
+![image](docs/demo_diagram.jpeg)
+
+### Kibana Dashboard
+Kibana will display a simple dashboard showing the average temperature by device, location, total average temperature and a heatmap with the current temperature per location (but be aware the temperature are not real, they are all dummy data)
+
+![image](docs/kibana_dashboard_1.png)
+![image](docs/kibana_dashboard_2.png)
+
+### Postgres Data
+Although the data will be in Elasticsearch it will also be sent to PostgreSQL. That is just to display the capabilities of Confluent Platform where data can be fanned out to several destinations in parallel and in real-time
+
+![image](docs/postgres_view_data.png)
+
+## Running the demo
+Before running the demo for the first time, please execute the following steps:
 * Clone this repo: `git clone git@github.com:ifnesi/data-fabric-iot-kafka`
 * Go to the demo folder: `cd data-fabric-iot-kafka`
 * Create a Python virtual environment: `python3 -m venv .venv`
@@ -34,23 +194,14 @@ Demo is composed of:
 * Install the python requirements: `python3 -m pip install -r requirements.txt`
 * Deactivate the Python virtual environment: `deactivate`
 
-### Demo Diagram and how it works
+All demo configuration are set via environment variables (please refer to the file `.env` for details).
 
-Overview
-![image](docs/demo_diagram_overview.jpeg)
-
-Payload and Topics
-![image](docs/demo_diagram.jpeg)
-
-Kibana Dashboard
-![image](docs/kibana_dashboard_1.png)
-![image](docs/kibana_dashboard_2.png)
-
-Postgres Data
-![image](docs/postgres_view_data.png)
-
-## Running the demo
 To start the demo, please run `./start.sh`, after downloading all docker images it should take less than 2 minutes to have everything up and running.
+
+Once the starting script is completed it will open the following browser tabs:
+* Confluent Control Center: http://localhost:9021/clusters
+* Kibana: http://localhost:5601/app/dashboards#/view/33a1c386-e80a-4aa5-87a2-18382f186c0b
+* pgAdmin: http://localhost:5050 (username: `admin@admin.org`, password: `admin`)
 
 Output example:
 ```
