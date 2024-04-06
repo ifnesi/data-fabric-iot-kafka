@@ -35,8 +35,8 @@ Demo is composed of:
 * Deactivate the Python virtual environment: `deactivate`
 
 ### Demo Diagram and how it works
+![image](docs/demo_diagram_overview.jpeg)
 ![image](docs/demo_diagram.jpeg)
-
 ![image](docs/kibana_dashboard_1.png)
 ![image](docs/kibana_dashboard_2.png)
 ![image](docs/postgres_view_data.png)
