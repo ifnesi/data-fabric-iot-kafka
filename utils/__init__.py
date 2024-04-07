@@ -37,11 +37,17 @@ def round_temp(t: float) -> float:
     return float(f"{t:.4f}")
 
 
-def get_delta(mu: float = 0, sigma: float = 0.01) -> float:
+def get_delta(
+    mu: float = 0,
+    sigma: float = 0.01,
+) -> float:
     return round_temp(random.gauss(mu, sigma))
 
 
-def get_next_interval(a: int, b: int) -> float:
+def get_next_interval(
+    a: int,
+    b: int,
+) -> float:
     return time.time() + random.randint(a, b) / 1000
 
 
@@ -54,9 +60,9 @@ def generate_serial_number(
 
 
 @lru_cache
-def get_locations(file: str = "locations.json") -> list:
+def get_locations(location_data_file: str) -> list:
     try:
-        with open(file, "r") as f:
+        with open(location_data_file, "r") as f:
             result = json.loads(f.read())
     except Exception:
         logging.error(sys_exc(sys.exc_info()))
@@ -74,15 +80,15 @@ def get_locations(file: str = "locations.json") -> list:
 def get_details(
     id: int,
     seed: str,
+    location_data_file: str,
 ) -> tuple:
     serial_number = generate_serial_number(id, seed)
     seed_sn = int(serial_number, 16)
-    locations = get_locations()
+    locations = get_locations(location_data_file)
     location = locations[seed_sn % len(locations)]
-    seed_loc = int(
-        hashlib.sha256(location["city"].encode("utf-8")).hexdigest()[-12:], 16
-    )
-    temp_mu = 37 - seed_loc % 17
+    seed_loc_hash = hashlib.sha256(location["city"].encode("utf-8")).hexdigest()
+    seed_loc = int(seed_loc_hash[-12:], 16)
+    temp_mu = 7 + seed_loc % 17
     temp_sigma = 1
     return (
         serial_number,

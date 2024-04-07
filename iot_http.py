@@ -96,6 +96,7 @@ if __name__ == "__main__":
 
     # Load env variables
     load_dotenv(find_dotenv())
+    LOCATION_DATA = os.environ["LOCATION_DATA"]
     HTTP_SCHEME = os.environ["HTTP_SCHEME"]
     HTTP_HOST = os.environ["HTTP_HOST"]
     HTTP_PORT = int(os.environ["HTTP_PORT"])
@@ -113,7 +114,11 @@ if __name__ == "__main__":
     # Devices cache
     devices = dict()
     for _id in range(HTTP_DEVICES):
-        serial_number, location, temp_mu, temp_sigma = get_details(_id, SEED)
+        serial_number, location, temp_mu, temp_sigma = get_details(
+            _id,
+            SEED,
+            LOCATION_DATA,
+        )
         devices[_id] = {
             "serial_number": serial_number,
             "temperature": get_delta(temp_mu, temp_sigma),

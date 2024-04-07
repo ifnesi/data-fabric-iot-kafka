@@ -131,6 +131,7 @@ if __name__ == "__main__":
 
     # Load env variables
     load_dotenv(find_dotenv())
+    LOCATION_DATA = os.environ["LOCATION_DATA"]
     SYSLOG_HOST = os.environ["SYSLOG_HOST"]
     SYSLOG_PORT = int(os.environ["SYSLOG_PORT"])
     SYSLOG_PROTOCOL = os.environ["SYSLOG_PROTOCOL"]
@@ -145,7 +146,11 @@ if __name__ == "__main__":
     # Devices cache
     devices = dict()
     for _id in range(SYSLOG_DEVICES):
-        serial_number, location, temp_mu, temp_sigma = get_details(_id, SEED)
+        serial_number, location, temp_mu, temp_sigma = get_details(
+            _id,
+            SEED,
+            LOCATION_DATA,
+        )
         devices[_id] = {
             "serial_number": serial_number,
             "temperature": get_delta(temp_mu, temp_sigma),
