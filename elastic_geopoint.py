@@ -15,7 +15,6 @@ if __name__ == "__main__":
         "Content-Type": "application/json; charset=utf-8",
     }
     NEW_FIELD = "gps"
-    SCRIPT = f"ctx._source.{NEW_FIELD}=[ctx._source.longitude,ctx._source.latitude];"
 
     logging.info(f"Creating Geo Point field on Elastic (Field Name: {NEW_FIELD})")
 
@@ -30,7 +29,13 @@ if __name__ == "__main__":
     response = requests.put(
         f"{BASE_URL}/{mapping}/_mapping",
         headers=HEADERS,
-        json={"properties": {"gps": {"type": "geo_point"}}},
+        json={
+            "properties": {
+                "gps": {
+                    "type": "geo_point",
+                }
+            }
+        },
     )
     logging.info(f"Status code: {response.status_code}")
 
@@ -38,14 +43,22 @@ if __name__ == "__main__":
     while True:
         try:
             requests.post(
-                f"{BASE_URL}/{mapping}/_update_by_query?wait_for_completion=true",
+                f"{BASE_URL}/{mapping}/_update_by_query?wait_for_completion=true&slices=5",
                 headers=HEADERS,
                 json={
+                    # Only update empty/null 'gps' fields
                     "query": {
-                        "match_all": {},
+                        "bool": {
+                            "must_not": {
+                                "exists": {
+                                    "field": "gps",
+                                }
+                            }
+                        }
                     },
+                    # Set GPS coordinates into field 'gps'
                     "script": {
-                        "source": SCRIPT,
+                        "source": f"ctx._source.{NEW_FIELD}=[ctx._source.longitude,ctx._source.latitude];",
                         "lang": "painless",
                     },
                 },
@@ -53,4 +66,4 @@ if __name__ == "__main__":
         except Exception:
             pass
         finally:
-            time.sleep(1)
+            time.sleep(5)
