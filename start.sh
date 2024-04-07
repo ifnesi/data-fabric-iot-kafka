@@ -97,7 +97,7 @@ curl -i -X PUT http://localhost:8083/connectors/syslog_source/config \
         }'
 sleep 5
 echo ""
-curl -s http://localhost:8083/connectors/syslog_source/status
+curl -s http://localhost:8083/connectors/syslog_source/status | jq .
 sleep 1
 
 echo ""
@@ -122,7 +122,7 @@ curl -i -X PUT http://localhost:18083/connectors/spooldir_source/config \
         }'
 sleep 5
 echo ""
-curl -s http://localhost:18083/connectors/spooldir_source/status
+curl -s http://localhost:18083/connectors/spooldir_source/status | jq .
 sleep 1
 
 echo ""
@@ -146,7 +146,7 @@ curl -i -X PUT http://localhost:8083/connectors/mqtt_source/config \
         }'
 sleep 5
 echo ""
-curl -s http://localhost:8083/connectors/mqtt_source/status
+curl -s http://localhost:8083/connectors/mqtt_source/status | jq .
 sleep 1
 
 echo ""
@@ -171,7 +171,7 @@ curl -i -X PUT http://localhost:8083/connectors/rabbitmq_source/config \
         }'
 sleep 5
 echo ""
-curl -s http://localhost:8083/connectors/rabbitmq_source/status
+curl -s http://localhost:8083/connectors/rabbitmq_source/status | jq .
 sleep 1
 
 # ksqlDB Statements
@@ -200,7 +200,7 @@ curl -i -X PUT http://localhost:8083/connectors/elastic_sink/config \
         }'
 sleep 5
 echo ""
-curl -s http://localhost:8083/connectors/elastic_sink/status
+curl -s http://localhost:8083/connectors/elastic_sink/status | jq .
 echo ""
 
 # Postgres Connector
@@ -219,7 +219,7 @@ curl -i -X PUT http://localhost:8083/connectors/postgres_sink/config \
         }'
 sleep 5
 echo ""
-curl -s http://localhost:8083/connectors/postgres_sink/status
+curl -s http://localhost:8083/connectors/postgres_sink/status | jq .
 echo ""
 
 sleep 5
@@ -229,13 +229,13 @@ sleep 5
 logging "Creating Kibana/Elastic Dashboard"
 sleep 10
 # POST http://localhost:5601/api/saved_objects/_export {"type": "dashboard","includeReferencesDeep": true}
-curl -X POST "http://localhost:5601/api/saved_objects/_import?createNewCopies=true" -H "kbn-xsrf: true" --form file=@kibana_dashboard.ndjson
+curl -X POST "http://localhost:5601/api/saved_objects/_import?createNewCopies=true" -H "kbn-xsrf: true" --form file=@$KIBANA_DASHBOARD
 
 
 # Open browser with C3, Kibana and PGAdmin consoles
 python3 -m webbrowser -t "http://localhost:5050"
 python3 -m webbrowser -t "http://localhost:9021/clusters"
-python3 -m webbrowser -t "http://localhost:5601/app/dashboards#/view/33a1c386-e80a-4aa5-87a2-18382f186c0b"
+python3 -m webbrowser -t "http://localhost:5601/app/dashboards"
 
 deactivate
 
