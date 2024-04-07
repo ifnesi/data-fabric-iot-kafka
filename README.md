@@ -1,4 +1,4 @@
-![image](docs/logo.png)
+![image](_docs/logo.png)
 
 # data-fabric-iot-kafka
 In this simple but comprehensive demo, Confluent Platform acts as true central nervous system, ingesting data from several edge devices. These devices send important information like temperature and GPS location, but they use many different communication and application protocols, such as [MQTT](https://en.wikipedia.org/wiki/MQTT), [HTTP](https://en.wikipedia.org/wiki/HTTP), [Kafka](https://en.wikipedia.org/wiki/Apache_Kafka), [CoAP](https://en.wikipedia.org/wiki/Constrained_Application_Protocol), [Syslog](https://en.wikipedia.org/wiki/Syslog), and [RabbitMQ](https://en.wikipedia.org/wiki/RabbitMQ) (just to name a few). This diversity reflects the IoT world's nature, where a single standard is more the exception than the norm, requiring a robust, highly scalable, and adaptable data streaming platform.
@@ -17,9 +17,10 @@ Confluent Platform or Confluent Cloud is an excellent choice for a data fabric a
 7. **Ecosystem and Community Support**: Being a widely adopted platform, Confluent benefits from a large community and ecosystem, providing extensive resources, support, and innovation.
 
 ## Demo Diagram (Overview)
-![image](docs/demo_diagram_overview.jpeg)
+![image](_docs/demo_diagram_overview.jpeg)
 
 ## Software Requirements
+* [jq](https://jqlang.github.io/jq/)
 * [curl](https://curl.se/)
 * [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 * [Python 3.8+](https://www.python.org/)
@@ -45,7 +46,7 @@ With exception of the python scripts emulating the edge devices, the demo runs a
   * [Elasticsearch Service Sink Connector for Confluent Platform](https://docs.confluent.io/kafka-connectors/elasticsearch/current/overview.html)
   * [JDBC Sink Connector for Confluent Platform](https://docs.confluent.io/kafka-connectors/jdbc/current/sink-connector/overview.html)
 * Python scripts:
-  * `coap_server.py`: emulate a CoAP Server. All data transmitted by the CoAP devices are logged into files under the folder `./coap-data/` to then be processed by the Spool Dir source connector
+  * `coap_server.py`: emulate a CoAP Server. All data transmitted by the CoAP devices (JSON) are logged into files under the folder `./coap-data/` to then be processed by the Spool Dir source connector
   * `iot_coap.py`: emulate edge devices transmitting data via CoAP:
   ```
    Value = {
@@ -183,18 +184,30 @@ With exception of the python scripts emulating the edge devices, the demo runs a
   * `elastic_geopoint.py`: script to add a new field into the Elasticsearch table. Field name is `gps` data type `geo_point` containing the latitude and longitude as reported by the edge devices
 
 ### Diagram overview with the payload and data flow
-![image](docs/demo_diagram.jpeg)
+![image](_docs/demo_diagram.jpeg)
+
+### Kafka Data Topics
+![image](_docs/kafka_topics.png)
+
+### Data in the normalized topic `data-fabric-ALL-devices`
+![image](_docs/topic_all_devices.png)
+
+### Connect Clusters
+![image](_docs/connect_clusters.png)
+
+### ksqlDB Persistent Queries
+![image](_docs/ksqldb_persistent_queries.png)
 
 ### Kibana Dashboard
 Kibana will display a simple dashboard showing the average temperature by device, location, total average temperature and a heatmap with the current temperature per location (but be aware the temperature are not real, they are all dummy data)
 
-![image](docs/kibana_dashboard_1.png)
-![image](docs/kibana_dashboard_2.png)
+![image](_docs/kibana_dashboard_1.png)
+![image](_docs/kibana_dashboard_2.png)
 
 ### Postgres Data
 Although the data will be in Elasticsearch it will also be sent to PostgreSQL. That is just to display the capabilities of Confluent Platform where data can be fanned out to several destinations in parallel and in real-time
 
-![image](docs/postgres_view_data.png)
+![image](_docs/postgres_view_data.png)
 
 ## Running the demo
 Before running the demo for the first time, please execute the following steps:
