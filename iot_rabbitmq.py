@@ -48,7 +48,7 @@ if __name__ == "__main__":
     RABBITMQ_HOST = os.environ["RABBITMQ_HOST"]
     RABBITMQ_PORT = int(os.environ["RABBITMQ_PORT"])
     RABBITMQ_DEVICES = min(25, int(os.environ["RABBITMQ_DEVICES"]))
-    RABBITMQ_CHANNEL = os.environ["RABBITMQ_CHANNEL"]
+    RABBITMQ_QUEUE = os.environ["RABBITMQ_QUEUE"]
     RABBITMQ_MIN_ITERVAL_MS = int(os.environ["RABBITMQ_MIN_ITERVAL_MS"])
     RABBITMQ_MAX_ITERVAL_MS = int(os.environ["RABBITMQ_MAX_ITERVAL_MS"])
 
@@ -78,7 +78,7 @@ if __name__ == "__main__":
     connection, channel = connect(
         RABBITMQ_HOST,
         RABBITMQ_PORT,
-        RABBITMQ_CHANNEL,
+        RABBITMQ_QUEUE,
     )
 
     # Main thread loop
@@ -110,7 +110,7 @@ if __name__ == "__main__":
                             )
                             channel.basic_publish(
                                 exchange="",
-                                routing_key=RABBITMQ_CHANNEL,
+                                routing_key=RABBITMQ_QUEUE,
                                 body=json.dumps(message),
                             )
                             devices[_id]["last_sent"] = get_next_interval(
@@ -118,19 +118,19 @@ if __name__ == "__main__":
                                 RABBITMQ_MAX_ITERVAL_MS,
                             )
                             logging.info(
-                                f"Sent message from device ({devices[_id]['serial_number']}) to queue {RABBITMQ_CHANNEL}: {message}"
+                                f"Sent message from device ({devices[_id]['serial_number']}) to queue {RABBITMQ_QUEUE}: {message}"
                             )
                     except Exception:
                         logging.error(sys_exc(sys.exc_info()))
                         logging.error(
-                            f"Error when sending message from device ({devices[_id]['serial_number']}) to queue {RABBITMQ_CHANNEL}: {message}"
+                            f"Error when sending message from device ({devices[_id]['serial_number']}) to queue {RABBITMQ_QUEUE}: {message}"
                         )
 
             else:
                 connection, channel = connect(
                     RABBITMQ_HOST,
                     RABBITMQ_PORT,
-                    RABBITMQ_CHANNEL,
+                    RABBITMQ_QUEUE,
                 )
 
             time.sleep(0.05)
