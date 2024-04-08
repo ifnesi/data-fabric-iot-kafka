@@ -1,9 +1,12 @@
 import os
+import re
 import glob
 import json
 import time
 import logging
 import requests
+
+from dotenv import load_dotenv, find_dotenv
 
 from utils import set_logging_handler
 
@@ -14,14 +17,24 @@ def flat_file(file: str) -> str:
     return data
 
 
+def repl_env_vars(text: str) -> str:
+    env_vars = set(re.findall("\$([A-Za-z-_]+)", text))
+    for var in env_vars:
+        if var in os.environ.keys():
+            text = text.replace(f"${var}", os.environ[var])
+    return text
+
+
 if __name__ == "__main__":
     FILE_APP = os.path.splitext(os.path.split(__file__)[-1])[0]
     set_logging_handler(FILE_APP)
 
-    logging.info("Submitting ksqlDB statements")
-    for file in sorted(glob.glob(os.path.join("ksqldb", "statement_*.sql"))):
-        statement = flat_file(file)
-        print("")
+    # Load env variables
+    load_dotenv(find_dotenv())
+
+    logging.info("Submitting ksqlDB statements\n")
+    for file in sorted(glob.glob(os.path.join("ksqldb", "*.sql"))):
+        statement = repl_env_vars(flat_file(file))
         logging.info(f"{file}:\n{statement}")
         try:
             response = requests.post(
@@ -53,7 +66,6 @@ if __name__ == "__main__":
             response = err
 
         finally:
-            print("")
-            log(f"Response [{status_code}]:\n{response}")
+            log(f"Response [Status Code = {status_code}]:\n{response}\n")
 
         time.sleep(5)
