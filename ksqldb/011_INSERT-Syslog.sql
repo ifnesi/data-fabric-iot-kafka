@@ -1,4 +1,4 @@
-INSERT INTO `data-fabric-ALL-devices`
+INSERT INTO `$KAFKA_ALL_DEVICES`
     SELECT
         `deviceVersion` AS `id`,
         AS_VALUE(`deviceVersion`) AS `serial_number`,
@@ -10,5 +10,5 @@ INSERT INTO `data-fabric-ALL-devices`
         'SYSLOG' AS `device_type`,
         CAST(`extension`['cfp2'] AS DOUBLE) AS `latitude`,
         CAST(`extension`['cfp3'] AS DOUBLE) AS `longitude`
-    FROM `data-fabric-syslog-devices`
+    FROM `$KAFKA_SYSLOG_TOPIC`
     PARTITION BY `deviceVersion`;

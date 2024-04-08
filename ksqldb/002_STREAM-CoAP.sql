@@ -1,4 +1,4 @@
-CREATE STREAM IF NOT EXISTS `data-fabric-coap-devices` (
+CREATE STREAM IF NOT EXISTS `$KAFKA_COAP_TOPIC` (
     `timestamp` TIMESTAMP,
     `tmp` DOUBLE,
     `manufacturer` VARCHAR,
@@ -8,6 +8,6 @@ CREATE STREAM IF NOT EXISTS `data-fabric-coap-devices` (
     `lat` DOUBLE,
     `long` DOUBLE
 ) WITH (
-    KAFKA_TOPIC = 'data-fabric-coap-devices',
+    KAFKA_TOPIC = '$KAFKA_COAP_TOPIC',
     VALUE_FORMAT = 'JSON'
 );

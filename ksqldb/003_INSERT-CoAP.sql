@@ -1,4 +1,4 @@
-INSERT INTO `data-fabric-ALL-devices`
+INSERT INTO `$KAFKA_ALL_DEVICES`
     SELECT
         `sn` AS `id`,
         AS_VALUE(`sn`) AS `serial_number`,
@@ -10,5 +10,5 @@ INSERT INTO `data-fabric-ALL-devices`
         'COAP' AS `device_type`,
         `lat` AS `latitude`,
         `long` AS `longitude`
-    FROM `data-fabric-coap-devices`
+    FROM `$KAFKA_COAP_TOPIC`
     PARTITION BY `sn`;

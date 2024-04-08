@@ -1,4 +1,4 @@
-INSERT INTO `data-fabric-ALL-devices`
+INSERT INTO `$KAFKA_ALL_DEVICES`
     SELECT
         SPLIT(`key`, '/')[5] AS `id`,
         AS_VALUE(SPLIT(`key`, '/')[5]) AS `serial_number`,
@@ -10,5 +10,5 @@ INSERT INTO `data-fabric-ALL-devices`
         'MQTT' AS `device_type`,
         CAST(EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.latitude') AS DOUBLE) AS `latitude`,
         CAST(EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.longitude') AS DOUBLE) AS `longitude`
-    FROM `data-fabric-mqtt-devices`
+    FROM `$KAFKA_MQTT_TOPIC`
     PARTITION BY SPLIT(`key`, '/')[5];

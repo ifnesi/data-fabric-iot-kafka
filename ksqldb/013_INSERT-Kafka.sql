@@ -1,4 +1,4 @@
-INSERT INTO `data-fabric-ALL-devices`
+INSERT INTO `$KAFKA_ALL_DEVICES`
     SELECT
         `ID` AS `id`,
         AS_VALUE(`ID`) AS `serial_number`,
@@ -11,5 +11,5 @@ INSERT INTO `data-fabric-ALL-devices`
         'KAFKA' AS `device_type`,
         `LAT` AS `latitude`,
         `LNG` AS `longitude`
-    FROM `data-fabric-kafka-devices`
+    FROM `$KAFKA_TOPIC`
     PARTITION BY `ID`;

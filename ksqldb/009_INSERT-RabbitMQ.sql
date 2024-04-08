@@ -1,4 +1,4 @@
-INSERT INTO `data-fabric-ALL-devices`
+INSERT INTO `$KAFKA_ALL_DEVICES`
     SELECT
         EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.serno') AS `id`,
         AS_VALUE(EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.serno')) AS `serial_number`,
@@ -9,5 +9,5 @@ INSERT INTO `data-fabric-ALL-devices`
         'RABBITMQ' AS `device_type`,
         CAST(EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.lat') AS DOUBLE) AS `latitude`,
         CAST(EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.lon') AS DOUBLE) AS `longitude`
-    FROM `data-fabric-rabbitmq-devices`
+    FROM `$KAFKA_RABBITMQ_TOPIC`
     PARTITION BY EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.serno');

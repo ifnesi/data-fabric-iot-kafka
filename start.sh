@@ -89,7 +89,7 @@ curl -i -X PUT http://localhost:8083/connectors/syslog_source/config \
             "syslog.port": 1514,
             "syslog.listener": "TCP",
             "syslog.listen.address": "0.0.0.0",
-            "topic": "data-fabric-syslog-devices",
+            "topic": "'$KAFKA_SYSLOG_TOPIC'",
             "syslog.queue.batch.size": 100,
             "syslog.queue.max.size": 100,
             "syslog.write.timeout.millis": 10000,
@@ -113,7 +113,7 @@ curl -i -X PUT http://localhost:18083/connectors/spooldir_source/config \
             "tasks.max": "1",
             "key.converter": "org.apache.kafka.connect.storage.StringConverter",
             "value.converter": "org.apache.kafka.connect.storage.StringConverter",
-            "topic": "data-fabric-coap-devices",
+            "topic": "'$KAFKA_COAP_TOPIC'",
             "input.path": "/tmp/coap-data",
             "finished.path": "/tmp/coap-data/finished",
             "error.path": "/tmp/coap-data/error",
@@ -141,7 +141,7 @@ curl -i -X PUT http://localhost:8083/connectors/mqtt_source/config \
             "connector.class": "io.confluent.connect.mqtt.MqttSourceConnector",
             "mqtt.server.uri": "tcp://mosquitto:1883",
             "mqtt.topics": "python/mqtt/#",
-            "kafka.topic": "data-fabric-mqtt-devices",
+            "kafka.topic": "'$KAFKA_MQTT_TOPIC'",
             "tasks.max": "1"
         }'
 sleep 5
@@ -165,8 +165,8 @@ curl -i -X PUT http://localhost:8083/connectors/rabbitmq_source/config \
             "connector.class": "io.confluent.connect.rabbitmq.RabbitMQSourceConnector",
             "rabbitmq.host": "rabbitmq",
             "rabbitmq.port": 5672,
-            "rabbitmq.queue": "iot-rabbitmq",
-            "kafka.topic": "data-fabric-rabbitmq-devices",
+            "rabbitmq.queue": "'$RABBITMQ_QUEUE'",
+            "kafka.topic": "'$KAFKA_RABBITMQ_TOPIC'",
             "tasks.max": "1"
         }'
 sleep 5
@@ -188,7 +188,7 @@ curl -i -X PUT http://localhost:8083/connectors/elastic_sink/config \
             "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
             "connection.url": "http://elasticsearch:9200",
             "key.ignore": "true",
-            "topics": "data-fabric-ALL-devices",
+            "topics": "'$KAFKA_ALL_DEVICES'",
             "drop.invalid.message": "true",
             "behavior.on.null.values": "IGNORE",
             "behavior.on.malformed.documents": "ignore",
@@ -209,7 +209,7 @@ curl -i -X PUT http://localhost:8083/connectors/postgres_sink/config \
      -H "Content-Type: application/json" \
      -d '{
             "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
-            "topics": "data-fabric-ALL-devices",
+            "topics": "'$KAFKA_ALL_DEVICES'",
             "connection.url": "jdbc:postgresql://postgres:5432/postgres?verifyServerCertificate=false&useSSL=false&requireSSL=false",
             "connection.user": "postgres",
             "connection.password": "postgres",
@@ -222,22 +222,17 @@ echo ""
 curl -s http://localhost:8083/connectors/postgres_sink/status | jq .
 echo ""
 
-sleep 5
-python3 elastic_geopoint.py &
-sleep 5
-
-logging "Creating Kibana/Elastic Dashboard"
+#e.g. -> POST http://localhost:5601/api/saved_objects/_export {"type": "dashboard","includeReferencesDeep": true} OR {"type": "index-pattern", "includeReferencesDeep": true}
+logging "Importing Kibana Index/Dashboard"
 sleep 10
-# POST http://localhost:5601/api/saved_objects/_export {"type": "dashboard","includeReferencesDeep": true}
 curl -X POST "http://localhost:5601/api/saved_objects/_import?createNewCopies=true" -H "kbn-xsrf: true" --form file=@$KIBANA_DASHBOARD
-
 
 # Open browser with C3, Kibana and PGAdmin consoles
 python3 -m webbrowser -t "http://localhost:5050"
 python3 -m webbrowser -t "http://localhost:9021/clusters"
 python3 -m webbrowser -t "http://localhost:5601/app/dashboards"
 
-deactivate
-
 logging "Demo successfully started"
+
+deactivate
 echo ""

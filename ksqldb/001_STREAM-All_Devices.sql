@@ -1,4 +1,4 @@
-CREATE STREAM IF NOT EXISTS `data-fabric-ALL-devices` (
+CREATE STREAM IF NOT EXISTS `$KAFKA_ALL_DEVICES` (
     `id` VARCHAR KEY,
     `serial_number` VARCHAR,
     `timestamp` TIMESTAMP,
@@ -10,7 +10,7 @@ CREATE STREAM IF NOT EXISTS `data-fabric-ALL-devices` (
     `latitude` DOUBLE,
     `longitude` DOUBLE
 ) WITH (
-    KAFKA_TOPIC = 'data-fabric-ALL-devices',
+    KAFKA_TOPIC = '$KAFKA_ALL_DEVICES',
     PARTITIONS=1,
     KEY_FORMAT = 'KAFKA',
     VALUE_FORMAT = 'AVRO'

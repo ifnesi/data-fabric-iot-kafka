@@ -1,4 +1,4 @@
-CREATE STREAM IF NOT EXISTS `data-fabric-http-devices` (
+CREATE STREAM IF NOT EXISTS `$KAFKA_HTTP_TOPIC` (
     `tm` TIMESTAMP,
     `temp` DOUBLE,
     `mnf` VARCHAR,
@@ -8,6 +8,6 @@ CREATE STREAM IF NOT EXISTS `data-fabric-http-devices` (
     `lt` DOUBLE,
     `lg` DOUBLE
 ) WITH (
-    KAFKA_TOPIC = 'data-fabric-http-devices',
+    KAFKA_TOPIC = '$KAFKA_HTTP_TOPIC',
     VALUE_FORMAT = 'JSON'
 );
