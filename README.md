@@ -49,6 +49,7 @@ With exception of the python scripts emulating the edge devices, the demo runs a
   * `coap_server.py`: emulate a CoAP Server. All data transmitted by the CoAP devices (JSON) are logged into files under the folder `./coap-data/` to then be processed by the Spool Dir source connector
   * `iot_coap.py`: emulate edge devices transmitting data via CoAP:
   ```
+   Kafka Topic = data-fabric-coap-devices (env var KAFKA_COAP_TOPIC)
    Value = {
       "timestamp": 1712403220046,  # EPOCH timestamp
       "tmp": 28.9552,              # Temperature in C
@@ -62,6 +63,7 @@ With exception of the python scripts emulating the edge devices, the demo runs a
   ```
   * `iot_http.py`: emulate edge devices transmitting data via HTTP to the Confluent Platform HTTP Rest Proxy:
   ```
+   Kafka Topic = data-fabric-http-devices (env var KAFKA_HTTP_TOPIC)
    Value = {
       "tm": 1712402959641,      # EPOCH timestamp
       "temp": 36.8015,          # Temperature in C
@@ -75,6 +77,7 @@ With exception of the python scripts emulating the edge devices, the demo runs a
   ```
   * `iot_kafka.py`: emulate edge devices transmitting data directly to Confluent Platform using the Kafka protocol:
   ```
+   Kafka Topic = data-fabric-kafka-devices (env var KAFKA_TOPIC)
    Key = 22962b1b74aa                            # Device serial number
    Value = {
       "datetime": "2024-04-06 11:29:42.492824",  # Timestamp
@@ -89,7 +92,8 @@ With exception of the python scripts emulating the edge devices, the demo runs a
   ```
   * `iot_mqtt.py`: emulate edge devices transmitting data via the MQTT protocol:
   ```
-   Topic = python/mqtt/PicoQ/Q1/ac1867dffb73  # python/mqtt/<Device manufacturer name>/<Device product family>/<Device serial number>
+   Kafka Topic = data-fabric-mqtt-devices (env var KAFKA_MQTT_TOPIC)
+   MQTT Topic = python/mqtt/PicoQ/Q1/ac1867dffb73  # python/mqtt/<Device manufacturer name>/<Device product family>/<Device serial number>
    Value = {
       "epoch": "2024-04-06 11:28:14.619587",  # Timestamp
       "temperature": 93.609,                  # Temperature in F 
@@ -101,6 +105,7 @@ With exception of the python scripts emulating the edge devices, the demo runs a
   ```
   * `iot_rabbitmq.py`: emulate edge devices transmitting data via the RabbitMQ protocol:
   ```
+   Kafka Topic = data-fabric-rabbitmq-devices (env var KAFKA_RABBITMQ_TOPIC)
    Value = {
       "timestamp": "2024-04-06 11:31:16.492909",  # Timestamp
       "temp": 18.1642,                            # Temperature in C
@@ -114,6 +119,7 @@ With exception of the python scripts emulating the edge devices, the demo runs a
   ```
   * `iot_syslog.py`: emulate edge devices transmitting data via Syslog (CEF format):
   ```
+   Kafka Topic = data-fabric-syslog-devices (env var KAFKA_SYSLOG_TOPIC)
    Device Transmits data in this format:
       <13>Apr 06 12:27:15 P3W32CDKHC CEF:0|SysTemp|SysIotLog|c007cd785cf2|100|Telemetry|5|cfp1=36.6724 cfp1Label=C cfp2=51.623 cfp2Label=lat cfp3=0.009 cfp3Label=lon deviceDirection=Chingford
    The Syslog Source Connector have it converted to:
@@ -229,9 +235,9 @@ Once the starting script is completed it will open the following browser tabs:
 
 Output example:
 ```
-[start] 2024-04-06 12:12:11.000 [INFO]: Killing processes
-[start] 2024-04-06 12:12:11.000 [INFO]: Loading environment variables
-[start] 2024-04-06 12:12:11.000 [INFO]: Starting docker compose
+[start] 2024-04-08 10:55:36.000 [INFO]: Killing processes
+[start] 2024-04-08 10:55:36.000 [INFO]: Loading environment variables
+[start] 2024-04-08 10:55:36.000 [INFO]: Starting docker compose
 [+] Running 15/16
  ⠋ Network data-fabric-iot-kafka_default        Created
  ✔ Container mosquitto                          Started
@@ -249,12 +255,12 @@ Output example:
  ✔ Container rest-proxy                         Started
  ✔ Container ksqldb-cli                         Started
  ✔ Container control-center                     Started
-[start] 2024-04-06 12:12:14.000 [INFO]: Waiting Schema Registry to be ready......................
-[start] 2024-04-06 12:12:37.000 [INFO]: Waiting ksqlDB Cluster to be ready
-[start] 2024-04-06 12:12:37.000 [INFO]: Waiting Connect Cluster #1 to be ready..................................
-[start] 2024-04-06 12:13:12.000 [INFO]: Waiting Connect Cluster #2 to be ready
-[start] 2024-04-06 12:13:12.000 [INFO]: Waiting Confluent Control Center to be ready
-[start] 2024-04-06 12:13:12.000 [INFO]: Activating Virtual Environment / installing Python requirements
+[start] 2024-04-08 10:55:38.000 [INFO]: Waiting Schema Registry to be ready........................
+[start] 2024-04-08 10:56:03.000 [INFO]: Waiting ksqlDB Cluster to be ready.
+[start] 2024-04-08 10:56:05.000 [INFO]: Waiting Connect Cluster #1 to be ready..................................
+[start] 2024-04-08 10:56:40.000 [INFO]: Waiting Connect Cluster #2 to be ready
+[start] 2024-04-08 10:56:40.000 [INFO]: Waiting Confluent Control Center to be ready
+[start] 2024-04-08 10:56:40.000 [INFO]: Activating Virtual Environment / installing Python requirements
 Requirement already satisfied: aiocoap==0.4.7 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 1)) (0.4.7)
 Requirement already satisfied: cefevent==0.5.6 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 2)) (0.5.6)
 Requirement already satisfied: confluent-kafka==2.3.0 in ./.venv/lib/python3.12/site-packages (from -r requirements.txt (line 3)) (2.3.0)
@@ -268,56 +274,117 @@ Requirement already satisfied: charset-normalizer<4,>=2 in ./.venv/lib/python3.1
 Requirement already satisfied: idna<4,>=2.5 in ./.venv/lib/python3.12/site-packages (from requests==2.31.0->-r requirements.txt (line 9)) (3.6)
 Requirement already satisfied: urllib3<3,>=1.21.1 in ./.venv/lib/python3.12/site-packages (from requests==2.31.0->-r requirements.txt (line 9)) (2.2.1)
 Requirement already satisfied: certifi>=2017.4.17 in ./.venv/lib/python3.12/site-packages (from requests==2.31.0->-r requirements.txt (line 9)) (2024.2.2)
-[start] 2024-04-06 12:13:13.000 [INFO]: Starting Kafka IoT device
-[start] 2024-04-06 12:13:14.000 [INFO]: Starting HTTP IoT device
-[start] 2024-04-06 12:13:14.000 [INFO]: Starting Syslog Connector
+[start] 2024-04-08 10:56:41.000 [INFO]: Starting Kafka IoT device
+[start] 2024-04-08 10:56:41.000 [INFO]: Starting HTTP IoT device
+[start] 2024-04-08 10:56:41.000 [INFO]: Starting Syslog Connector
 HTTP/1.1 201 Created
-Date: Sat, 06 Apr 2024 11:13:14 GMT
+Date: Mon, 08 Apr 2024 09:56:41 GMT
 Location: http://localhost:8083/connectors/syslog_source
 Content-Type: application/json
 Content-Length: 387
 
 {"name":"syslog_source","config":{"connector.class":"io.confluent.connect.syslog.SyslogSourceConnector","syslog.port":"1514","syslog.listener":"TCP","syslog.listen.address":"0.0.0.0","topic":"data-fabric-syslog-devices","syslog.queue.batch.size":"100","syslog.queue.max.size":"100","syslog.write.timeout.millis":"10000","tasks.max":"1","name":"syslog_source"},"tasks":[],"type":"source"}
-{"name":"syslog_source","connector":{"state":"RUNNING","worker_id":"connect-1:8083"},"tasks":[{"id":0,"state":"RUNNING","worker_id":"connect-1:8083"}],"type":"source"}
-[start] 2024-04-06 12:13:20.000 [INFO]: Starting SysLog IoT device
-[start] 2024-04-06 12:13:20.000 [INFO]: Starting Spooldir Connector
+{
+  "name": "syslog_source",
+  "connector": {
+    "state": "RUNNING",
+    "worker_id": "connect-1:8083"
+  },
+  "tasks": [
+    {
+      "id": 0,
+      "state": "RUNNING",
+      "worker_id": "connect-1:8083"
+    }
+  ],
+  "type": "source"
+}
+
+[start] 2024-04-08 10:56:48.000 [INFO]: Starting SysLog IoT device
+[start] 2024-04-08 10:56:48.000 [INFO]: Starting Spooldir Connector
 HTTP/1.1 201 Created
-Date: Sat, 06 Apr 2024 11:13:20 GMT
+Date: Mon, 08 Apr 2024 09:56:48 GMT
 Location: http://localhost:18083/connectors/spooldir_source
 Content-Type: application/json
 Content-Length: 601
 
 {"name":"spooldir_source","config":{"connector.class":"com.github.jcustenborder.kafka.connect.spooldir.SpoolDirSchemaLessJsonSourceConnector","tasks.max":"1","key.converter":"org.apache.kafka.connect.storage.StringConverter","value.converter":"org.apache.kafka.connect.storage.StringConverter","topic":"data-fabric-coap-devices","input.path":"/tmp/coap-data","finished.path":"/tmp/coap-data/finished","error.path":"/tmp/coap-data/error","input.file.pattern":"telemetry.[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{2}-[0-9]{2}-[0-9]{2}","halt.on.error":"false","name":"spooldir_source"},"tasks":[],"type":"source"}
-{"name":"spooldir_source","connector":{"state":"RUNNING","worker_id":"connect-2:8083"},"tasks":[{"id":0,"state":"RUNNING","worker_id":"connect-2:8083"}],"type":"source"}
-[start] 2024-04-06 12:13:26.000 [INFO]: Starting CoAP Server
-[start] 2024-04-06 12:13:28.000 [INFO]: Starting CoAP IoT device
-[start] 2024-04-06 12:13:28.000 [INFO]: Starting MQTT Connector
+{
+  "name": "spooldir_source",
+  "connector": {
+    "state": "RUNNING",
+    "worker_id": "connect-2:8083"
+  },
+  "tasks": [
+    {
+      "id": 0,
+      "state": "RUNNING",
+      "worker_id": "connect-2:8083"
+    }
+  ],
+  "type": "source"
+}
+
+[start] 2024-04-08 10:56:54.000 [INFO]: Starting CoAP Server
+[start] 2024-04-08 10:56:56.000 [INFO]: Starting CoAP IoT device
+[start] 2024-04-08 10:56:56.000 [INFO]: Starting MQTT Connector
 HTTP/1.1 201 Created
-Date: Sat, 06 Apr 2024 11:13:28 GMT
+Date: Mon, 08 Apr 2024 09:56:56 GMT
 Location: http://localhost:8083/connectors/mqtt_source
 Content-Type: application/json
 Content-Length: 275
 
 {"name":"mqtt_source","config":{"connector.class":"io.confluent.connect.mqtt.MqttSourceConnector","mqtt.server.uri":"tcp://mosquitto:1883","mqtt.topics":"python/mqtt/#","kafka.topic":"data-fabric-mqtt-devices","tasks.max":"1","name":"mqtt_source"},"tasks":[],"type":"source"}
-{"name":"mqtt_source","connector":{"state":"RUNNING","worker_id":"connect-1:8083"},"tasks":[{"id":0,"state":"RUNNING","worker_id":"connect-1:8083"}],"type":"source"}
-[start] 2024-04-06 12:13:34.000 [INFO]: Starting MQTT IoT device
-[start] 2024-04-06 12:13:34.000 [INFO]: Starting RabbitMQ IoT device
-[start] 2024-04-06 12:13:37.000 [INFO]: Starting RabbitMQ Connector
+{
+  "name": "mqtt_source",
+  "connector": {
+    "state": "RUNNING",
+    "worker_id": "connect-1:8083"
+  },
+  "tasks": [
+    {
+      "id": 0,
+      "state": "RUNNING",
+      "worker_id": "connect-1:8083"
+    }
+  ],
+  "type": "source"
+}
+
+[start] 2024-04-08 10:57:02.000 [INFO]: Starting MQTT IoT device
+[start] 2024-04-08 10:57:02.000 [INFO]: Starting RabbitMQ IoT device
+[start] 2024-04-08 10:57:05.000 [INFO]: Starting RabbitMQ Connector
 HTTP/1.1 201 Created
-Date: Sat, 06 Apr 2024 11:13:37 GMT
+Date: Mon, 08 Apr 2024 09:57:05 GMT
 Location: http://localhost:8083/connectors/rabbitmq_source
 Content-Type: application/json
 Content-Length: 306
 
 {"name":"rabbitmq_source","config":{"connector.class":"io.confluent.connect.rabbitmq.RabbitMQSourceConnector","rabbitmq.host":"rabbitmq","rabbitmq.port":"5672","rabbitmq.queue":"iot-rabbitmq","kafka.topic":"data-fabric-rabbitmq-devices","tasks.max":"1","name":"rabbitmq_source"},"tasks":[],"type":"source"}
-{"name":"rabbitmq_source","connector":{"state":"RUNNING","worker_id":"connect-1:8083"},"tasks":[{"id":0,"state":"RUNNING","worker_id":"connect-1:8083"}],"type":"source"}
-[start] 2024-04-06 12:13:44.000 [INFO]: Submitting ksqlDB statements
-[ksqldb_provisioning] 2024-04-06 12:13:54.217 [INFO]: Submitting ksqlDB statements
+{
+  "name": "rabbitmq_source",
+  "connector": {
+    "state": "RUNNING",
+    "worker_id": "connect-1:8083"
+  },
+  "tasks": [
+    {
+      "id": 0,
+      "state": "RUNNING",
+      "worker_id": "connect-1:8083"
+    }
+  ],
+  "type": "source"
+}
 
-[ksqldb_provisioning] 2024-04-06 12:13:54.218 [INFO]: ksqldb/statement_001.sql:
+[start] 2024-04-08 10:57:11.000 [INFO]: Submitting ksqlDB statements
+/Users/inesi/Documents/_CFLT/Dev/Python/data-fabric-iot-kafka/ksqldb_provisioning.py:21: SyntaxWarning: invalid escape sequence '\$'
+  env_vars = set(re.findall("\$([A-Za-z-_]+)", text))
+[ksqldb_provisioning] 2024-04-08 10:57:21.972 [INFO]: Submitting ksqlDB statements
+
+[ksqldb_provisioning] 2024-04-08 10:57:21.972 [INFO]: ksqldb/001_STREAM-All_Devices.sql:
 CREATE STREAM IF NOT EXISTS `data-fabric-ALL-devices` ( `id` VARCHAR KEY, `serial_number` VARCHAR, `timestamp` TIMESTAMP, `temperature_c` DOUBLE, `manufacturer` VARCHAR, `product` VARCHAR, `city` VARCHAR, `device_type` VARCHAR, `latitude` DOUBLE, `longitude` DOUBLE ) WITH ( KAFKA_TOPIC = 'data-fabric-ALL-devices', PARTITIONS=1, KEY_FORMAT = 'KAFKA', VALUE_FORMAT = 'AVRO' );
-
-[ksqldb_provisioning] 2024-04-06 12:13:54.602 [INFO]: Response [200]:
+[ksqldb_provisioning] 2024-04-08 10:57:22.341 [INFO]: Response [Status Code = 200]:
 [
    {
       "@type": "currentStatus",
@@ -333,10 +400,9 @@ CREATE STREAM IF NOT EXISTS `data-fabric-ALL-devices` ( `id` VARCHAR KEY, `seria
    }
 ]
 
-[ksqldb_provisioning] 2024-04-06 12:13:59.606 [INFO]: ksqldb/statement_002.sql:
+[ksqldb_provisioning] 2024-04-08 10:57:27.349 [INFO]: ksqldb/002_STREAM-CoAP.sql:
 CREATE STREAM IF NOT EXISTS `data-fabric-coap-devices` ( `timestamp` TIMESTAMP, `tmp` DOUBLE, `manufacturer` VARCHAR, `family` VARCHAR, `pos` VARCHAR, `sn` VARCHAR, `lat` DOUBLE, `long` DOUBLE ) WITH ( KAFKA_TOPIC = 'data-fabric-coap-devices', VALUE_FORMAT = 'JSON' );
-
-[ksqldb_provisioning] 2024-04-06 12:13:59.824 [INFO]: Response [200]:
+[ksqldb_provisioning] 2024-04-08 10:57:27.555 [INFO]: Response [Status Code = 200]:
 [
    {
       "@type": "currentStatus",
@@ -352,10 +418,9 @@ CREATE STREAM IF NOT EXISTS `data-fabric-coap-devices` ( `timestamp` TIMESTAMP, 
    }
 ]
 
-[ksqldb_provisioning] 2024-04-06 12:14:04.827 [INFO]: ksqldb/statement_003.sql:
+[ksqldb_provisioning] 2024-04-08 10:57:32.560 [INFO]: ksqldb/003_INSERT-CoAP.sql:
 INSERT INTO `data-fabric-ALL-devices` SELECT `sn` AS `id`, AS_VALUE(`sn`) AS `serial_number`, `timestamp` AS `timestamp`, `tmp` AS `temperature_c`, `manufacturer` AS `manufacturer`, `family` AS `product`, `pos` AS `city`, 'COAP' AS `device_type`, `lat` AS `latitude`, `long` AS `longitude` FROM `data-fabric-coap-devices` PARTITION BY `sn`;
-
-[ksqldb_provisioning] 2024-04-06 12:14:05.615 [INFO]: Response [200]:
+[ksqldb_provisioning] 2024-04-08 10:57:33.308 [INFO]: Response [Status Code = 200]:
 [
    {
       "@type": "currentStatus",
@@ -371,10 +436,9 @@ INSERT INTO `data-fabric-ALL-devices` SELECT `sn` AS `id`, AS_VALUE(`sn`) AS `se
    }
 ]
 
-[ksqldb_provisioning] 2024-04-06 12:14:10.623 [INFO]: ksqldb/statement_004.sql:
+[ksqldb_provisioning] 2024-04-08 10:57:38.315 [INFO]: ksqldb/004_STREAM-HTTP.sql:
 CREATE STREAM IF NOT EXISTS `data-fabric-http-devices` ( `tm` TIMESTAMP, `temp` DOUBLE, `mnf` VARCHAR, `prd` VARCHAR, `loc` VARCHAR, `sn` VARCHAR, `lt` DOUBLE, `lg` DOUBLE ) WITH ( KAFKA_TOPIC = 'data-fabric-http-devices', VALUE_FORMAT = 'JSON' );
-
-[ksqldb_provisioning] 2024-04-06 12:14:10.835 [INFO]: Response [200]:
+[ksqldb_provisioning] 2024-04-08 10:57:38.500 [INFO]: Response [Status Code = 200]:
 [
    {
       "@type": "currentStatus",
@@ -390,10 +454,9 @@ CREATE STREAM IF NOT EXISTS `data-fabric-http-devices` ( `tm` TIMESTAMP, `temp` 
    }
 ]
 
-[ksqldb_provisioning] 2024-04-06 12:14:15.839 [INFO]: ksqldb/statement_005.sql:
+[ksqldb_provisioning] 2024-04-08 10:57:43.503 [INFO]: ksqldb/005_INSERT-HTTP.sql:
 INSERT INTO `data-fabric-ALL-devices` SELECT `sn` AS `id`, AS_VALUE(`sn`) AS `serial_number`, `tm` AS `timestamp`, `temp` AS `temperature_c`, `mnf` AS `manufacturer`, `prd` AS `product`, `loc` AS `city`, 'HTTP' AS `device_type`, `lt` AS `latitude`, `lg` AS `longitude` FROM `data-fabric-http-devices` PARTITION BY `sn`;
-
-[ksqldb_provisioning] 2024-04-06 12:14:16.187 [INFO]: Response [200]:
+[ksqldb_provisioning] 2024-04-08 10:57:43.876 [INFO]: Response [Status Code = 200]:
 [
    {
       "@type": "currentStatus",
@@ -409,10 +472,9 @@ INSERT INTO `data-fabric-ALL-devices` SELECT `sn` AS `id`, AS_VALUE(`sn`) AS `se
    }
 ]
 
-[ksqldb_provisioning] 2024-04-06 12:14:21.194 [INFO]: ksqldb/statement_006.sql:
+[ksqldb_provisioning] 2024-04-08 10:57:48.882 [INFO]: ksqldb/006_STREAM-MQTT.sql:
 CREATE STREAM IF NOT EXISTS `data-fabric-mqtt-devices` ( `key` VARCHAR KEY, `payload` VARCHAR ) WITH ( KAFKA_TOPIC = 'data-fabric-mqtt-devices', VALUE_FORMAT = 'KAFKA' );
-
-[ksqldb_provisioning] 2024-04-06 12:14:21.391 [INFO]: Response [200]:
+[ksqldb_provisioning] 2024-04-08 10:57:49.068 [INFO]: Response [Status Code = 200]:
 [
    {
       "@type": "currentStatus",
@@ -428,10 +490,9 @@ CREATE STREAM IF NOT EXISTS `data-fabric-mqtt-devices` ( `key` VARCHAR KEY, `pay
    }
 ]
 
-[ksqldb_provisioning] 2024-04-06 12:14:26.397 [INFO]: ksqldb/statement_007.sql:
+[ksqldb_provisioning] 2024-04-08 10:57:54.071 [INFO]: ksqldb/007_INSERT_MQTT.sql:
 INSERT INTO `data-fabric-ALL-devices` SELECT SPLIT(`key`, '/')[5] AS `id`, AS_VALUE(SPLIT(`key`, '/')[5]) AS `serial_number`, PARSE_TIMESTAMP(EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.epoch'), 'yyyy-MM-dd HH:mm:ss.SSSSSS') AS `timestamp`, (CAST(EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.temperature') AS DOUBLE) - 32) * 5/9 AS `temperature_c`, SPLIT(`key`, '/')[3] AS `manufacturer`, SPLIT(`key`, '/')[4] AS `product`, EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.location') AS `city`, 'MQTT' AS `device_type`, CAST(EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.latitude') AS DOUBLE) AS `latitude`, CAST(EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.longitude') AS DOUBLE) AS `longitude` FROM `data-fabric-mqtt-devices` PARTITION BY SPLIT(`key`, '/')[5];
-
-[ksqldb_provisioning] 2024-04-06 12:14:26.997 [INFO]: Response [200]:
+[ksqldb_provisioning] 2024-04-08 10:57:54.618 [INFO]: Response [Status Code = 200]:
 [
    {
       "@type": "currentStatus",
@@ -447,10 +508,9 @@ INSERT INTO `data-fabric-ALL-devices` SELECT SPLIT(`key`, '/')[5] AS `id`, AS_VA
    }
 ]
 
-[ksqldb_provisioning] 2024-04-06 12:14:32.003 [INFO]: ksqldb/statement_008.sql:
+[ksqldb_provisioning] 2024-04-08 10:57:59.622 [INFO]: ksqldb/008_STREAM_RabbitMQ.sql:
 CREATE STREAM IF NOT EXISTS `data-fabric-rabbitmq-devices` ( `payload` VARCHAR ) WITH ( KAFKA_TOPIC = 'data-fabric-rabbitmq-devices', VALUE_FORMAT = 'KAFKA' );
-
-[ksqldb_provisioning] 2024-04-06 12:14:32.187 [INFO]: Response [200]:
+[ksqldb_provisioning] 2024-04-08 10:57:59.814 [INFO]: Response [Status Code = 200]:
 [
    {
       "@type": "currentStatus",
@@ -466,10 +526,9 @@ CREATE STREAM IF NOT EXISTS `data-fabric-rabbitmq-devices` ( `payload` VARCHAR )
    }
 ]
 
-[ksqldb_provisioning] 2024-04-06 12:14:37.192 [INFO]: ksqldb/statement_009.sql:
+[ksqldb_provisioning] 2024-04-08 10:58:04.821 [INFO]: ksqldb/009_INSERT-RabbitMQ.sql:
 INSERT INTO `data-fabric-ALL-devices` SELECT EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.serno') AS `id`, AS_VALUE(EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.serno')) AS `serial_number`, PARSE_TIMESTAMP(EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.timestamp'), 'yyyy-MM-dd HH:mm:ss.SSSSSS') AS `timestamp`, CAST(EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.temp') AS DOUBLE) AS `temperature_c`, EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.provider') AS `manufacturer`, EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.product') AS `product`,EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.region') AS `city`, 'RABBITMQ' AS `device_type`, CAST(EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.lat') AS DOUBLE) AS `latitude`, CAST(EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.lon') AS DOUBLE) AS `longitude` FROM `data-fabric-rabbitmq-devices` PARTITION BY EXTRACTJSONFIELD(SUBSTRING(`payload`, 6, LEN(`payload`)), '$.serno');
-
-[ksqldb_provisioning] 2024-04-06 12:14:37.717 [INFO]: Response [200]:
+[ksqldb_provisioning] 2024-04-08 10:58:05.279 [INFO]: Response [Status Code = 200]:
 [
    {
       "@type": "currentStatus",
@@ -485,10 +544,9 @@ INSERT INTO `data-fabric-ALL-devices` SELECT EXTRACTJSONFIELD(SUBSTRING(`payload
    }
 ]
 
-[ksqldb_provisioning] 2024-04-06 12:14:42.722 [INFO]: ksqldb/statement_010.sql:
+[ksqldb_provisioning] 2024-04-08 10:58:10.286 [INFO]: ksqldb/010_STREAM-Syslog.sql:
 CREATE STREAM IF NOT EXISTS `data-fabric-syslog-devices` ( `extension` MAP<VARCHAR, VARCHAR>, `deviceVendor` VARCHAR, `deviceProduct` VARCHAR, `deviceVersion` VARCHAR, `timestamp` TIMESTAMP ) WITH ( KAFKA_TOPIC = 'data-fabric-syslog-devices', VALUE_FORMAT = 'AVRO' );
-
-[ksqldb_provisioning] 2024-04-06 12:14:42.940 [INFO]: Response [200]:
+[ksqldb_provisioning] 2024-04-08 10:58:10.487 [INFO]: Response [Status Code = 200]:
 [
    {
       "@type": "currentStatus",
@@ -504,10 +562,9 @@ CREATE STREAM IF NOT EXISTS `data-fabric-syslog-devices` ( `extension` MAP<VARCH
    }
 ]
 
-[ksqldb_provisioning] 2024-04-06 12:14:47.947 [INFO]: ksqldb/statement_011.sql:
+[ksqldb_provisioning] 2024-04-08 10:58:15.490 [INFO]: ksqldb/011_INSERT-Syslog.sql:
 INSERT INTO `data-fabric-ALL-devices` SELECT `deviceVersion` AS `id`, AS_VALUE(`deviceVersion`) AS `serial_number`, `timestamp` AS `timestamp`, CAST(`extension`['cfp1'] AS DOUBLE) AS `temperature_c`, `deviceVendor` AS `manufacturer`, `deviceProduct` AS `product`, `extension`['deviceDirection'] AS `city`, 'SYSLOG' AS `device_type`, CAST(`extension`['cfp2'] AS DOUBLE) AS `latitude`, CAST(`extension`['cfp3'] AS DOUBLE) AS `longitude` FROM `data-fabric-syslog-devices` PARTITION BY `deviceVersion`;
-
-[ksqldb_provisioning] 2024-04-06 12:14:48.336 [INFO]: Response [200]:
+[ksqldb_provisioning] 2024-04-08 10:58:15.861 [INFO]: Response [Status Code = 200]:
 [
    {
       "@type": "currentStatus",
@@ -523,10 +580,9 @@ INSERT INTO `data-fabric-ALL-devices` SELECT `deviceVersion` AS `id`, AS_VALUE(`
    }
 ]
 
-[ksqldb_provisioning] 2024-04-06 12:14:53.337 [INFO]: ksqldb/statement_012.sql:
+[ksqldb_provisioning] 2024-04-08 10:58:20.863 [INFO]: ksqldb/012_STREAM-Kafka.sql:
 CREATE STREAM IF NOT EXISTS `data-fabric-kafka-devices` WITH ( KAFKA_TOPIC = 'data-fabric-kafka-devices', VALUE_FORMAT = 'AVRO' ); 
-
-[ksqldb_provisioning] 2024-04-06 12:14:53.541 [INFO]: Response [200]:
+[ksqldb_provisioning] 2024-04-08 10:58:21.054 [INFO]: Response [Status Code = 200]:
 [
    {
       "@type": "currentStatus",
@@ -542,10 +598,9 @@ CREATE STREAM IF NOT EXISTS `data-fabric-kafka-devices` WITH ( KAFKA_TOPIC = 'da
    }
 ]
 
-[ksqldb_provisioning] 2024-04-06 12:14:58.542 [INFO]: ksqldb/statement_013.sql:
+[ksqldb_provisioning] 2024-04-08 10:58:26.057 [INFO]: ksqldb/013_INSERT-Kafka.sql:
 INSERT INTO `data-fabric-ALL-devices` SELECT `ID` AS `id`, AS_VALUE(`ID`) AS `serial_number`, PARSE_TIMESTAMP(`DATETIME`, 'yyyy-MM-dd HH:mm:ss.SSSSSS') AS `timestamp`, `TEMPERATURE` AS `temperature_c`, `MANUFACTURER` AS `manufacturer`, `PRODUCT` AS `product`, `REGION` AS `city`, 'KAFKA' AS `device_type`, `LAT` AS `latitude`, `LNG` AS `longitude` FROM `data-fabric-kafka-devices` PARTITION BY `ID`;
-
-[ksqldb_provisioning] 2024-04-06 12:14:58.875 [INFO]: Response [200]:
+[ksqldb_provisioning] 2024-04-08 10:58:26.386 [INFO]: Response [Status Code = 200]:
 [
    {
       "@type": "currentStatus",
@@ -560,33 +615,60 @@ INSERT INTO `data-fabric-ALL-devices` SELECT `ID` AS `id`, AS_VALUE(`ID`) AS `se
       "warnings": []
    }
 ]
-[start] 2024-04-06 12:15:03.000 [INFO]: Starting Elastic Connector
+
+[start] 2024-04-08 10:58:31.000 [INFO]: Starting Elastic Connector
 HTTP/1.1 201 Created
-Date: Sat, 06 Apr 2024 11:15:03 GMT
+Date: Mon, 08 Apr 2024 09:58:31 GMT
 Location: http://localhost:8083/connectors/elastic_sink
 Content-Type: application/json
 Content-Length: 510
 
 {"name":"elastic_sink","config":{"connector.class":"io.confluent.connect.elasticsearch.ElasticsearchSinkConnector","connection.url":"http://elasticsearch:9200","key.ignore":"true","topics":"data-fabric-ALL-devices","drop.invalid.message":"true","behavior.on.null.values":"IGNORE","behavior.on.malformed.documents":"ignore","write.method":"insert","data.stream.dataset":"iot","data.stream.type":"METRICS","data.stream.timestamp.field":"timestamp","tasks.max":"1","name":"elastic_sink"},"tasks":[],"type":"sink"}
-{"name":"elastic_sink","connector":{"state":"RUNNING","worker_id":"connect-1:8083"},"tasks":[{"id":0,"state":"RUNNING","worker_id":"connect-1:8083"}],"type":"sink"}
-[start] 2024-04-06 12:15:09.000 [INFO]: Starting Postgres Connector
+{
+  "name": "elastic_sink",
+  "connector": {
+    "state": "RUNNING",
+    "worker_id": "connect-1:8083"
+  },
+  "tasks": [
+    {
+      "id": 0,
+      "state": "RUNNING",
+      "worker_id": "connect-1:8083"
+    }
+  ],
+  "type": "sink"
+}
+
+[start] 2024-04-08 10:58:36.000 [INFO]: Starting Postgres Connector
 HTTP/1.1 201 Created
-Date: Sat, 06 Apr 2024 11:15:09 GMT
+Date: Mon, 08 Apr 2024 09:58:36 GMT
 Location: http://localhost:8083/connectors/postgres_sink
 Content-Type: application/json
 Content-Length: 424
 
 {"name":"postgres_sink","config":{"connector.class":"io.confluent.connect.jdbc.JdbcSinkConnector","topics":"data-fabric-ALL-devices","connection.url":"jdbc:postgresql://postgres:5432/postgres?verifyServerCertificate=false&useSSL=false&requireSSL=false","connection.user":"postgres","connection.password":"postgres","insert.mode":"insert","auto.create":"true","tasks.max":"1","name":"postgres_sink"},"tasks":[],"type":"sink"}
-{"name":"postgres_sink","connector":{"state":"RUNNING","worker_id":"connect-1:8083"},"tasks":[{"id":0,"state":"RUNNING","worker_id":"connect-1:8083"}],"type":"sink"}
-[elastic_geopoint] 2024-04-06 12:15:19.424 [INFO]: Creating Geo Point field on Elastic (Field Name: gps)
-[elastic_geopoint] 2024-04-06 12:15:19.424 [INFO]: Get mappings
-[elastic_geopoint] 2024-04-06 12:15:19.486 [INFO]: Status code: 200. Mappings found: .ds-metrics-iot-data-fabric-all-devices-2024.04.06-000001
-[elastic_geopoint] 2024-04-06 12:15:19.486 [INFO]: Adding new field: gps
-[elastic_geopoint] 2024-04-06 12:15:19.515 [INFO]: Status code: 200
-[start] 2024-04-06 12:15:24.000 [INFO]: Creating Kibana/Elastic Dashboard
-{"successCount":2,"success":true,"warnings":[],"successResults":[{"type":"index-pattern","id":"0f38690c-570d-4207-85c7-d2248dcc2e1e","meta":{"title":"Confluent Data Fabric","icon":"indexPatternApp"},"destinationId":"8ff8a67a-1935-4a79-9e73-d40fbab8c024"},{"type":"dashboard","id":"1920eb40-239a-4802-b376-51413bb8967f","meta":{"title":"Main Dashboard","icon":"dashboardApp"},"destinationId":"49245558-63a5-43f1-9a47-4654e28523d2"}]}
+{
+  "name": "postgres_sink",
+  "connector": {
+    "state": "RUNNING",
+    "worker_id": "connect-1:8083"
+  },
+  "tasks": [
+    {
+      "id": 0,
+      "state": "RUNNING",
+      "worker_id": "connect-1:8083"
+    }
+  ],
+  "type": "sink"
+}
 
-[start] 2024-04-06 12:15:35.000 [INFO]: Demo successfully started
+[start] 2024-04-08 10:58:41.000 [INFO]: Importing Kibana Dashboard
+{"successCount":2,"success":true,"warnings":[],"successResults":[{"type":"index-pattern","id":"bb6ada34-4fa2-47d7-adaf-5037f4091a92","meta":{"title":"Confluent Data Fabric","icon":"indexPatternApp"},"destinationId":"02ac33fd-bc8a-4fed-8692-43ee49be78f9"},{"type":"dashboard","id":"a77ef710-f587-11ee-bd93-011e9f669d6e","meta":{"title":"Main","icon":"dashboardApp"},"destinationId":"b08d250a-4b9a-42dc-ac61-5241a340803c"}]}
+
+
+[start] 2024-04-08 10:58:53.000 [INFO]: Demo successfully started
 ```
 
 ## Stopping the demo
@@ -594,9 +676,9 @@ To stop the demo, please run `./stop.sh`.
 
 Output example
 ```
-[stop] 2024-04-06 09:46:55.000 [INFO]: Killing processes
-[stop] 2024-04-06 09:46:55.000 [INFO]: Cleaning up old data files
-[stop] 2024-04-06 09:46:55.000 [INFO]: Stopping docker compose
+[stop] 2024-04-08 11:00:39.000 [INFO]: Killing processes
+[stop] 2024-04-08 11:00:39.000 [INFO]: Cleaning up old data files
+[stop] 2024-04-08 11:00:39.000 [INFO]: Stopping docker compose
 [+] Running 16/15
  ✔ Container ksqldb-cli                         Removed
  ✔ Container pgadmin                            Removed
@@ -614,7 +696,7 @@ Output example
  ✔ Container broker                             Removed
  ✔ Container zookeeper                          Removed
  ✔ Network data-fabric-iot-kafka_default        Removed
-[stop] 2024-04-06 09:47:19.000 [INFO]: Demo successfully stopped
+[stop] 2024-04-08 11:01:04.000 [INFO]: Demo successfully stopped
 ```
 
 ## External References
