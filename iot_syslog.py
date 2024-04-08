@@ -190,7 +190,7 @@ if __name__ == "__main__":
                                 unit=devices[_id]["unit"],
                             )
 
-                            logging.info(f"Syslog message sent:{syslog_data}")
+                            logging.info(f"Syslog message sent: {syslog_data.strip('\n').strip(' ')}")
 
                             devices[_id]["last_sent"] = get_next_interval(
                                 SYSLOG_MIN_ITERVAL_MS,
