@@ -18,7 +18,7 @@ ps aux  |  grep -i  ' ksqldb_provisioning.py'  |  awk '{print $2}'  |  xargs kil
 ps aux  |  grep -i  ' elastic_geopoint.py'  |  awk '{print $2}'  |  xargs kill -9 >/dev/null 2>&1 &
 
 logging "Cleaning up old data files"
-find coap-data/finished/telemetry* -ctime +1 -type d  -exec rm -rf {} \;
+rm -rf coap-data/finished/telemetry*
 
 logging "Stopping docker compose"
 if docker compose down ; then
