@@ -18,7 +18,7 @@ def flat_file(file: str) -> str:
 
 
 def repl_env_vars(text: str) -> str:
-    env_vars = set(re.findall("\$([A-Za-z-_]+)", text))
+    env_vars = set(re.findall(r"\$([A-Za-z-_]+)", text))
     for var in env_vars:
         if var in os.environ.keys():
             text = text.replace(f"${var}", os.environ[var])
